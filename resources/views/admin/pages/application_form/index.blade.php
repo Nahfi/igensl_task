@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_app')
 @section('admin_page_title')
-    Application form  | Task
+    Application Form Builder | Task
 @endsection
 @section('application_form_create_active')
     mm-active
@@ -74,7 +74,7 @@
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">Form Builder</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -93,9 +93,9 @@
                                                                 </div>
                                                                 <div class="col-12 mb-4">
                                                                   <div class="form-group">
-                                                                      <label for="input_name">Input Label <span class="text-danger">*</span></label>
-                                                                      <input placeholder="input label" type="text" class="form-control @error('input_name') is-invalid @enderror" name="input_name" id="input_name" value="{{ old('input_name') }}">
-                                                                      @error('input_name')
+                                                                      <label for="input_label">Input Label <span class="text-danger">*</span></label>
+                                                                      <input placeholder="input label" type="text" class="form-control @error('input_label') is-invalid @enderror" name="input_label" id="input_label" value="{{ old('input_label') }}">
+                                                                      @error('input_label')
                                                                           <span class="text-danger">{{ $message }}</span>
                                                                       @enderror
                                                                   </div>
@@ -103,8 +103,11 @@
                                                                 <div class="col-12 mb-4">
                                                                     <div class="form-group">
                                                                         <label for="status">Select Type <span class="text-danger">*</span> </label>
-                                                                        <label for="is_country">country</label>
-                                                                       <input type="checkbox" name="is_country" id="is_country" value="1" >
+
+                                                                        <div id='is-country' class="is_country">
+                                                                            <label for="is_country">country</label>
+                                                                            <input type="checkbox" name="is_country" id="is_country" value="1" >
+                                                                        </div>
                                                                         <select id="input-type" name="input_type" id="status" class="form-select  @error('input_type') is-invalid @enderror">
                                                                             <option value="">Select input type
                                                                             </option>
@@ -122,11 +125,11 @@
                                                                     </div>
                                                                   </div>
                                                                   <div class="col-lg-12">
-                                                                    <div id="select-value">
+                                                                    <div id="add-input">
                                                                     </div>
-                                                                    <div id="add-button">
-
-                                                                    </div>
+                                                                    <button id='add-more-option' type="button" class="btn btn-primary btn-sm" >
+                                                                        <i class="bx bx-plus me-1"></i>  Add More
+                                                                    </button
                                                                   </div>
 
                                                                 <div class="col-12 mb-4">
@@ -143,10 +146,10 @@
                                                                   </div>
                                                                 </div>
 
+                                                                <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                                                             </div>
 
 
-                                                          <button type="submit" class="btn btn-sm btn-primary">Submit</button>
 
                                                         </form>
                                                     </div>
@@ -318,37 +321,26 @@
         $(function(){
             'use_strict'
             //select box on change event
+            $('#is-country').hide()
+            $('#add-more-option').hide()
             $(document).on('change','#input-type',function(e){
-                $('#select-value').html('')
-                $('#add-button').html('')
-                $('#input-name').val(``)
-                $('#input-name').attr('readonly', false);
-                if($(this).val()=='file'){
-                    $('#input-name').val('file[]')
-                    $('#input-name').attr('readonly', true);
-                }
+
+                $('#add-input').html(``)
                 if($(this).val()=='select'){
+
+                    $('#is-country').show()
                     let randSelector = genarateRandomId()
-                    if( !$('#is_country').is(':checked') ){
-
-                        $('#select-value').html(
-                        `
-                        <div id='${randSelector}' >
-                            <div id="add-input" class="form-group mb-2">
-                                <label for="input_value">Option Value <span class="text-danger">*</span></label>
-                                <input required placeholder="option value" multiple name='input_value[]' type="text" class="delete form-control @error('input_value') is-invalid @enderror"  id="input_value" value="{{ old('input_value') }}">
-                                <a value="${randSelector}"  id="delete-option-item" class="text-center btn btn-sm btn-danger mt-2"><i class="fas fa-trash-alt"></i> Delete All</a>
-                                <button id='add-more-option' type="button" class="btn btn-primary btn-sm" >
-                                    <i class="bx bx-plus me-1"></i>  Add More
-                                </button
-                            </div>
-
-                        </div>
-                        `
-                        )
+                    if(!$('#is_country').is(':checked') ){
+                        $('#add-more-option').show()
                     }
+                    else{
+                        $('#add-input').html(``)
+                        $('#add-more-option').hide()
 
-
+                    }
+                }
+                else{
+                    $('#is-country').hide()
                 }
                 e.preventDefault()
             })
@@ -371,12 +363,29 @@
             })
 
             //delete option item
-
             $(document).on('click','#delete-option-item',function(e){
                 const divId = $(this).attr('value')
                 $(`#${divId}`).remove()
                 e.preventDefault()
             })
+
+            //check box click event
+            $(document).on('change','#is_country',function(e){
+                toggleAddMoreButton()
+            })
+
+            //hide and show button
+            function toggleAddMoreButton(){
+
+                if ($('#is_country').is(':checked')) {
+                    $('#add-more-option').hide()
+                    $('#add-input').html(``)
+                }
+                else{
+                    $('#add-more-option').show()
+
+                }
+            }
 
 
             //genarate random it
