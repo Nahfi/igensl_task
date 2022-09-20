@@ -96,6 +96,20 @@ class RolePermissionSeeder extends Seeder
 
                     ]
                 ],
+                [
+                    //form builder  permission
+                    'group_name' => 'formBuilder',
+                    'permissions' => [
+                        'form.index',
+                        'form.create',
+                        'form.store',
+                        'form.edit',
+                        'form.update',
+                        'form.destroy',
+
+                    ]
+                ],
+
 
 
             ];

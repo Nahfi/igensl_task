@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminApplicationController;
+use App\Http\Controllers\Admin\AdminApplicationFormController;
 use App\Http\Controllers\Admin\UserRoleController;
 
 /*
@@ -131,15 +132,25 @@ Route::get('/', function () {
                 Route::get('/country/{countryName}','getCountryInformation')->name('country');
             });
             //application route
-            Route::controller(AdminApplicationController::class)->prefix('application')->name('application.')->group(function(){
-                Route::get('/index','index')->name('index');
-                Route::get('/show/{id}','show')->name('show');
-                Route::post('/update/{id}','update')->name('update');
-                Route::get('/download/{name}','download')->name('download');
-                Route::get('/destroy/{id}','destroy')->name('destroy');
-                Route::get('/feed-back/{id}','feedback')->name('feedback');
-                Route::post('/feed-back/{id}','feedbackStore')->name('feedback.store');
-                Route::get('/feed-back/download/{name}','feedbackDownload')->name('feedback.download');
+            Route::prefix('application')->name('application.')->group(function(){
+
+                // user application route
+                Route::controller(AdminApplicationController::class)->group(function(){
+                    Route::get('/index','index')->name('index');
+                    Route::get('/show/{id}','show')->name('show');
+                    Route::post('/update/{id}','update')->name('update');
+                    Route::get('/download/{name}','download')->name('download');
+                    Route::get('/destroy/{id}','destroy')->name('destroy');
+                    Route::get('/feed-back/{id}','feedback')->name('feedback');
+                    Route::post('/feed-back/{id}','feedbackStore')->name('feedback.store');
+                    Route::get('/feed-back/download/{name}','feedbackDownload')->name('feedback.download');
+                });
+                //  application form element route
+                Route::controller(AdminApplicationFormController::class)->prefix('form')->name('form.')->group(function(){
+                    Route::get('/index','index')->name('index');
+                    Route::post('/store','store')->name('store');
+                });
+
             });
             //user role route
             Route::controller(UserRoleController::class)->prefix('user-role')->name('user.role.')->group(function(){

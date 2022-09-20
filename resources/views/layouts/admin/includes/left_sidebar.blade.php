@@ -29,17 +29,7 @@
                         <span data-key="t-dashboard">User role</span>
                     </a>
                 </li>
-            @endif
-
-                @if (Auth::guard('admin')->User()->can('user.index'))
-                    <li class="@yield('user_application_active')">
-                        <a href="{{route('admin.application.index')}}">
-                            <i data-feather="aperture"></i>
-                            <span data-key="t-dashboard">User Application</span>
-                        </a>
-                    </li>
                 @endif
-
 
 
                 @if (Auth::guard('admin')->user()->can('admin.index') || Auth::guard('admin')->user()->can('role.index'))
@@ -60,7 +50,33 @@
 
                         </ul>
                     </li>
-                @endif
+               @endif
+               @if (Auth::guard('admin')->user()->can('user.index') || Auth::guard('admin')->user()->can('role.index'))
+                    <li class="@yield('application_active')">
+                        <a href="javascript: void(0);" class="has-arrow" >
+                            <i data-feather="users"></i>
+                            <span data-key="t-ecommerce">Applications</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @if (Auth::guard('admin')->User()->can('user.index'))
+                                <li class="@yield('application_form_active')">
+                                    <a href="{{route('admin.application.index')}}">
+                                        <i data-feather="aperture"></i>
+                                        <span data-key="t-dashboard">All Applications</span>
+                                    </a>
+                                </li>
+                           @endif
+                            @if (Auth::guard('admin')->User()->can('user.index'))
+                                <li class="@yield('application_form_create_active')">
+                                    <a href="{{ route('admin.application.form.index')}}">
+                                        <i data-feather="aperture"></i>
+                                        <span data-key="t-dashboard"> Form Element</span>
+                                    </a>
+                                </li>
+                           @endif
+                        </ul>
+                    </li>
+               @endif
 
                 @if (Auth::guard('admin')->user()->can('generalSettings.index') || Auth::guard('admin')->user()->can('configSettings.index'))
                     <li class="@yield('settings_active')">

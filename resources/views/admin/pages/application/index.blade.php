@@ -81,7 +81,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($applications as $application)
+                                        {{--  @foreach($applications as $application)
                                             <tr>
 
                                                 <th>{{ $loop->iteration }}</th>
@@ -175,7 +175,7 @@
 
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @endforeach  --}}
                                     </tbody>
                                 </table>
                             </div>
