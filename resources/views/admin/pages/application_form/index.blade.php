@@ -81,16 +81,6 @@
                                                         <form action="{{ route('admin.application.form.store') }}" method="POST" enctype="multipart/form-data">
                                                             @csrf
                                                             <div class="row">
-                                                                <div class="col-12 mb-4">
-                                                                  <div class="form-group">
-                                                                      <label for="input_label">Input Name <span class="text-danger">*</span></label>
-                                                                      <input id="input-name" placeholder="input name" type="text" class="form-control @error('input_label') is-invalid @enderror" name="input_label" id="input_label" value="{{ old('input_label') }}">
-                                                                      @error('input_label')
-                                                                          <span class="text-danger">{{ $message }}</span>
-                                                                      @enderror
-                                                                  </div>
-
-                                                                </div>
                                                                 <div class="col-12 mb-2">
                                                                   <div class="form-group">
                                                                       <label for="is_required" for="input_label">Required<span class="text-danger">*</span></label>

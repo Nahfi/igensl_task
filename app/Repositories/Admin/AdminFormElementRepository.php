@@ -13,7 +13,6 @@ class AdminFormElementRepository{
     public function create($adminData){
 
     }
-
     /**
      * get all  form element
      */
@@ -24,6 +23,6 @@ class AdminFormElementRepository{
     public function clean($inputName) {
         $inputName = str_replace(' ', '-', $inputName);
         return preg_replace('/[^A-Za-z0-9\-]/', '', $inputName);
-     }
+    }
 
 }
