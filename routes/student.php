@@ -4,8 +4,16 @@ use App\Http\Controllers\User\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\CustomerProfileController;
 use App\Http\Controllers\User\ApplicationController;
+use App\Models\ApplicationFormElement;
 
 //user route start
+Route::get('/', function () {
+
+    return view('welcome',[
+        'formElememts'=>ApplicationFormElement::getAllActiveElement(),
+        'isCountryAvailable'=>in_array("country",ApplicationFormElement::getAllActiveElement()->pluck('input_name')->toArray())
+    ]);
+});
 Auth::routes(['verify' => true]);
 Route::name('user.')->group(function(){
 

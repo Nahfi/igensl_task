@@ -35,153 +35,186 @@
                                     <form action="{{ route('user.application.store') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="row mt-3">
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                         @forelse ($formElememts as $element )
+                                        @if($element->input_type == 'select' && $element->is_country != '1' )
                                                 <div class="form-group">
-                                                    <label for="fname">First Name <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('fname') is-invalid @enderror" name="fname" id="fname" value="{{ old('fname') }}">
-                                                    @error('fname')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div class="form-group">
-                                                    <label for="lname">last Name <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('lname') is-invalid @enderror" name="lname" id="lname" value="{{ old('lname') }}">
-                                                    @error('lname')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
+                                                    <label for="{{  $element->input_name }}">{{  $element->input_label }}@if($element->is_required == 1)
+                                                        <span class="text-danger">*</span>
+                                                    @endif</label>
+                                                        <select id="{{ $element->input_name }}" name="{{ $element->input_name }}" class="form-select @error( $element->input_name) is-invalid @enderror">
+                                                            <option value="">Select A {{  $element->input_label }}</option>
 
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div class="form-group">
-                                                    <label for="previousDegree">Previous Degree <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('previousDegree') is-invalid @enderror" name="previousDegree"  value="{{ old('previousDegree') }}">
-                                                    @error('previousDegree')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div class="form-group">
-                                                    <label for="email">Email <span class="text-danger">*</span></label>
-                                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"  value="{{ old('email') }}">
-                                                    @error('email')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div class="form-group">
-                                                    <label for="dob">Date Of Birth <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control @error('dob') is-invalid @enderror" name="dob"  value="{{ old('dob') }}">
-                                                    @error('dob')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div class="form-group">
-                                                    <label for="country">Country <span class="text-danger">*</span></label>
-                                                    <select id="countryName" name="country" class="form-select @error('country') is-invalid @enderror">
-                                                        <option value="">Select A Country</option>
-                                                        @foreach (getCountry() as $country )
-                                                            <option value="{{ $country->name }}">
-                                                                {{ $country->name }}
+                                                            @foreach (json_decode($element->input_value ) as $optionValue )
+                                                            <option  value="{{ $optionValue }}">
+                                                                {{ $optionValue }}
                                                             </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('country')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                            </div>
+                                                            @endforeach
 
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <label for="email">Phone <span class="text-danger">*</span></label>
-                                                <div class="input-group">
-
-                                                    <div  class="input-group-text">
-                                                        <select  name="countryCode">
-                                                          <option  id='countryCode'  value=""></option>
                                                         </select>
-                                                    </div>
-                                                    <input id="phoneNumber" type="number" class="form-control @error('phone') is-invalid @enderror" name="phone"  value="">
-
-                                                </div>
-                                                @if (count($errors) > 0)
-
-                                                    @foreach ($errors->all() as $error)
-                                                        @if ($error == 'validation.phone')
-                                                        <span class="text-danger">'Enter A valid Phone Number'</span>
-                                                        @endif
-
-                                                    @endforeach
-
-                                                @endif
-                                                {{--  <div class="mt-3 div">
-                                                    @error('phone')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>  --}}
-                                            </div>
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div class="form-group">
-                                                    <label for="country">Program <span class="text-danger">*</span></label>
-                                                    <select id="program" name="program" class="form-select @error('program') is-invalid @enderror">
-                                                        <option value="">Select A Program</option>
-
-                                                        <option {{ (old("program") == 'CSE' ? "selected":"") }}  value="CSE">
-                                                            CSE
-                                                        </option>
-                                                        <option {{ (old("program") == 'EEE' ? "selected":"") }} value="EEE">
-                                                            EEE
-                                                        </option>
-                                                        <option {{ (old("program") == 'BBA' ? "selected":"") }} value="BBA">
-                                                            BBA
-                                                        </option>
-                                                        <option {{ (old("program") == 'MBA' ? "selected":"") }} value="MBA">
-                                                            MBA
-                                                        </option>
-                                                    </select>
                                                     @error('program')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-                                            </div>
+                                            @else
+                                                @if($element->input_type == 'select' && $element->is_country == '1')
+                                                    <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="country">{{  $element->input_label }} @if($element->is_required == 1)
+                                                                <span class="text-danger">*</span>
+                                                            @endif</label>
+                                                            <select id="countryName" name="country" class="form-select @error('country') is-invalid @enderror">
+                                                                <option value="">Select A Country</option>
+                                                                @foreach (getCountry() as $country )
+                                                                    <option value="{{ $country->name }}">
+                                                                        {{ $country->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('country')
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                  @if($element->input_type == 'file')
+                                                  <div class="col-lg-12 col-md-6 col-sm-12 col-12 mt-3 mb-4">
+                                                    <div style="border:1px ,solid,#000" class="form-group">
+                                                        <label  for="file" > {{ $element->input_label}} (Image/PDF)  @if($element->is_required == 1)
+                                                            <span class="text-danger">*</span>
+                                                        @endif </label>
 
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div style="border:1px ,solid,#000" class="form-group">
-                                                    <label  for="file" >Image/PDF  </label>
+                                                        <input style="" id="file" multiple name="{{ $element->input_name }}" type="{{ $element->input_type }}" class="form-control @error($element->input_name) is-invalid @enderror"  >
+                                                        @if           (count($errors) > 0)
 
-                                                    <input style="" id="file" multiple name="file[]" type="file" class="form-control @error('file') is-invalid @enderror"  >
-                                                    @if (count($errors) > 0)
+                                                                @foreach ($errors->all() as $error)
+                                                                    @if ($error == 'Only images and pdf format are allowed')
+                                                                     <span class="text-danger">{{ $error }}</span>
+                                                                    @endif
 
-                                                            @foreach ($errors->all() as $error)
-                                                                @if ($error == 'Only images and pdf format are allowed')
-                                                                <span class="text-danger">{{ $error }}</span>
+                                                                @endforeach
+
+                                                        @endif
+
+                                                        <div id="image-preview" class="my-2"></div>
+                                                        <div id="file-preview"></div>
+
+                                                    </div>
+                                                  </div>
+                                                  @else
+
+                                                    @if($element->input_type == 'textarea')
+                                                    <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="country">{{ $element->input_label }}  @if($element->is_required == 1)
+                                                                <span class="text-danger">*</span>
+                                                            @endif  </label>
+                                                              <textarea class="form-control" name="{{  $element->input_name }}" id="" cols="30" rows="10"></textarea>
+                                                              <img  src="" alt="">
+                                                        </div>
+                                                    </div>
+                                                    @else
+
+                                                     @if($element->input_type == 'number')
+                                                        @if($element->is_mobile == 1)
+                                                                @if($isCountryAvailable)
+                                                                <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                                                    <label for="email">{{ $element->input_label }} <span class="text-danger">*</span></label>
+                                                                    <div class="input-group">
+
+                                                                        <div  class="input-group-text">
+                                                                            <select  name="countryCode">
+                                                                                <option  id='countryCode'  value=""></option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <input id="phoneNumber" type="{{ $element->input_type }}" class="form-control @error( $element->input_name) is-invalid @enderror" name="{{  $element->input_name }}"  value="">
+
+                                                                    </div>
+                                                                    @if (count($errors) > 0)
+
+                                                                        @foreach ($errors->all() as $error)
+                                                                            @if ($error == 'validation.phone')
+                                                                            <span class="text-danger">'Enter A valid Phone Number'</span>
+                                                                            @endif
+
+                                                                        @endforeach
+
+                                                                    @endif
+                                                                    <div class="mt-3 div">
+                                                                        @error('phone')
+                                                                        <span class="text-danger">{{ $message }}</span>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                                @else
+                                                                <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                                                    <label for="email">{{ $element->input_label }} <span class="text-danger">*</span></label>
+                                                                        <div class="input-group">
+
+                                                                            <div  class="input-group-text">
+                                                                                <select  name="countryCode">
+                                                                                    <option  id='countryCode'  value="BD,8">+880</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <input id="phoneNumber" type="{{ $element->input_type }}" class="form-control @error( $element->input_name) is-invalid @enderror" name="{{  $element->input_name }}"  value="">
+
+                                                                        </div>
+                                                                        @if (count($errors) > 0)
+
+                                                                            @foreach ($errors->all() as $error)
+                                                                                @if ($error == 'validation.phone')
+                                                                                <span class="text-danger">'Enter A valid Phone Number'</span>
+                                                                                @endif
+
+                                                                            @endforeach
+
+                                                                        @endif
+                                                                        <div class="mt-3 div">
+                                                                            @error('phone')
+                                                                            <span class="text-danger">{{ $message }}</span>
+                                                                            @enderror
+                                                                        </div>
+                                                                    </div>
                                                                 @endif
-
-                                                            @endforeach
+                                                        @else
+                                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                                                <div class="form-group">
+                                                                    <label for="{{ $element->input_name }}">{{ $element->input_label }}  @if($element->is_required == 1)
+                                                                        <span class="text-danger">*</span>
+                                                                    @endif  </label>
+                                                                    <input type="{{ $element->input_type  }}" class="form-control @error($element->input_name ) is-invalid @enderror" name="{{ $element->input_name }}" id="{{ $element->input_name  }}" value="{{ old($element->input_name ) }}">
+                                                                    @error($element->input_name )
+                                                                        <span class="text-danger">{{ $message }}</span>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                     @else
+                                                      <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                                        <div class="form-group">
+                                                            <label for="{{ $element->input_name }}">{{ $element->input_label }}  @if($element->is_required == 1)
+                                                                <span class="text-danger">*</span>
+                                                            @endif  </label>
+                                                            <input type="{{ $element->input_type  }}" class="form-control @error($element->input_name ) is-invalid @enderror" name="{{ $element->input_name }}" id="{{ $element->input_name  }}" value="{{ old($element->input_name ) }}">
+                                                            @error($element->input_name )
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                      </div>
+                                                     @endif
 
                                                     @endif
 
-                                                    <div id="image-preview" class="my-2"></div>
-                                                    <div id="file-preview"></div>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
-                                                <div class="form-group">
-                                                    <label for="country">Message </label>
-                                                      <textarea class="form-control" name="message" id="" cols="30" rows="10"></textarea>
-                                                      <img  src="" alt="">
-                                                </div>
-                                            </div>
+                                                  @endif
+
+                                                @endif
+
+                                        @endif
+
+                                         @empty
+                                           'No Element Found'
+                                         @endforelse
+
 
 
                                         </div>

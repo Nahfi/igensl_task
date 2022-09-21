@@ -17,12 +17,12 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_role_id')->nullable();
             $table->text('photo')->default('default.jpg');
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('name')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('country');
-            $table->longText('phone');
+            $table->string('country')->default('Bangladesh');
+            $table->longText('phone')->nullable();
             $table->longText('address')->nullable();
             $table->string('status')->default('DeActive');
             $table->unsignedBigInteger('created_by')->nullable();

@@ -28,9 +28,7 @@ use App\Http\Controllers\Admin\UserRoleController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
     //admin route start
     Route::prefix('admin')->name('admin.')->group(function(){

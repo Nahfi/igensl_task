@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ApplicationFromCreateRequest;
+use App\Models\ApplicationFormElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use  App\Repositories\Admin\AdminFormElementRepository;
@@ -28,25 +30,20 @@ class AdminApplicationFormController extends Controller
         if(is_null($this->user) || !$this->user->can('user.index')){
             abort(403,'Unauthorized access');
         }
-        // $applications = $this->adminFormElementRepository->index();
-        return view('admin.pages.application_form.index');
+        return view('admin.pages.application_form.index',[
+            'formElements' => $this->adminFormElementRepository->index(),
+            'existsPriorityIds'=>ApplicationFormElement::getAllActiveElement()->pluck('priority_id')->toArray()
+        ]);
     }
     /**
      * create a dynamic application
      */
-    public function store(Request $request){
-        // function clean($string) {
-        //     $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-
-        //     return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-        //  }
-        // $test = stri
-        dd($request->all());
-        // if(is_null($this->user) || !$this->user->can('user.index')){
-        //     abort(403,'Unauthorized access');
-        // }
-        // // $applications = $this->adminFormElementRepository->index();
-        // return view('admin.pages.application_form.index');
+    public function store(ApplicationFromCreateRequest $request){
+        if(is_null($this->user) || !$this->user->can('user.store')){
+            abort(403,'Unauthorized access');
+        }
+        $this->adminFormElementRepository->create($request);
+        return back()->with('form_element_create_success','Application Form Element Create Successfully');
     }
 
 }

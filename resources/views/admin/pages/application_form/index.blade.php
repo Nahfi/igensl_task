@@ -38,11 +38,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Applications</h4>
+                    <h4 class="mb-sm-0 font-size-18">formElements</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Applications</li>
+                            <li class="breadcrumb-item active">formElements</li>
                         </ol>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                             <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <h5 class="card-title me-4" style="float:left;margin-top:5px">Total Applications Form Element <span class="text-muted fw-normal ms-2">()</span></h5>
+                                        <h5 class="card-title me-4" style="float:left;margin-top:5px">Total Form Elements  <span class="text-muted fw-normal ms-2">({{ $formElements->count() }})</span></h5>
 
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                                             <div class="row">
                                                                 <div class="col-12 mb-2">
                                                                   <div class="form-group">
-                                                                      <label for="is_required" for="input_label">Required<span class="text-danger">*</span></label>
+                                                                      <label for="is_required" for="input_label">Required</label>
                                                                       <input  type="checkbox" name="is_required" id="is_required" value="1">
                                                                       @error('is_required')
                                                                           <span class="text-danger">{{ $message }}</span>
@@ -108,34 +108,56 @@
                                                                             <label for="is_country">country</label>
                                                                             <input type="checkbox" name="is_country" id="is_country" value="1" >
                                                                         </div>
+                                                                        <div id='is-mobile' class="is_mobile">
+                                                                            <label for="is_mobile">Mobile</label>
+                                                                            <input type="checkbox" name="is_mobile" id="is_mobile" value="1" >
+                                                                        </div>
                                                                         <select id="input-type" name="input_type" id="status" class="form-select  @error('input_type') is-invalid @enderror">
                                                                             <option value="">Select input type
                                                                             </option>
-                                                                            <option  value="text" {{ (old("input_type") == 'text' ? "selected":"") }}>Text</option>
-                                                                            <option  value="email" {{ (old("input_type") == 'email' ? "selected":"") }}>Email</option>
-                                                                            <option  value="file" {{ (old("input_type") == 'file' ? "selected":"") }}>File</option>
-                                                                            <option  value="number" {{ (old("input_type") == 'number' ? "selected":"") }}>Number</option>
-                                                                            <option  value="select" {{ (old("input_type") == 'select' ? "selected":"") }}>Select</option
-                                                                            <option  value="date" {{ (old("input_type") == 'date' ? "selected":"") }}>Date</option>
-                                                                            <option  value="textarea" {{ (old("input_type") == 'textarea' ? "selected":"") }}>TextArea</option>
+                                                                            <option  value="text" >Text</option>
+                                                                            <option  value="email" >Email</option>
+                                                                            <option  value="file">File</option>
+                                                                            <option  value="number" >Number</option>
+                                                                            <option  value="select" >Select</option
+                                                                            <option  value="date">Date</option>
+                                                                            <option  value="textarea">TextArea</option>
                                                                         </select>
                                                                         @error('input_type')
                                                                             <span class="text-danger">{{ $message }}</span>
                                                                         @enderror
                                                                     </div>
                                                                   </div>
-                                                                  <div class="col-lg-12">
+                                                                <div class="col-lg-12">
                                                                     <div id="add-input">
                                                                     </div>
                                                                     <button id='add-more-option' type="button" class="btn btn-primary btn-sm" >
                                                                         <i class="bx bx-plus me-1"></i>  Add More
                                                                     </button
+                                                                </div>
+
+                                                                <div class="col-12 mb-4">
+                                                                    <div class="form-group">
+                                                                        <label for="priority_id">Priority <span class="text-danger">*</span></label>
+                                                                        <select name="priority_id" id="priority_id" class="form-select  @error('priority_id') is-invalid @enderror">
+                                                                            <option selected value="">Select Priority</option>
+                                                                            //ajax diye check kora lagbe
+                                                                            @for($i = 1; $i <= 50; $i++)
+                                                                                @if(!in_array($i,$existsPriorityIds))
+                                                                                <option  value="{{ $i }}" >{{ $i }}</option>
+                                                                                @endif
+                                                                            @endfor
+                                                                        </select>
+                                                                        @error('priority_id')
+                                                                            <span class="text-danger">{{ $message }}</span>
+                                                                        @enderror
+                                                                    </div>
                                                                   </div>
 
                                                                 <div class="col-12 mb-4">
                                                                   <div class="form-group">
                                                                       <label for="status">Status <span class="text-danger">*</span></label>
-                                                                      <select input_name="status" id="status" class="form-select  @error('input_name') is-invalid @enderror">
+                                                                      <select name="status" id="status" class="form-select  @error('status') is-invalid @enderror">
                                                                           <option value="">select status</option>
                                                                           <option  value="Active" {{ (old("status") == 'Active' ? "selected":"") }}>Active</option>
                                                                           <option  value="Deactive" {{ (old("status") == 'Deactive' ? "selected":"") }}>Deactive</option>
@@ -175,53 +197,52 @@
                                     <tr>
 
                                         <th>S\N</th>
-                                        <th>Input Type</th>
-                                        <th>Input input_name</th>
+                                        <th>Input Type </th>
+                                        <th>Input Label</th>
+                                        <th>input_name</th>
                                         <th>Input Value</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        {{--  @foreach($applications as $application)
+                                        @foreach($formElements as $formElement)
                                             <tr>
 
                                                 <th>{{ $loop->iteration }}</th>
                                                 <th>
-                                                    {{ $application->first_input_name }}
+                                                    {{ $formElement->input_type }}(Requred  :{{ $formElement->is_required == 1 ? "True" :'False' }})
                                                 </th>
                                                 <th>
-                                                    {{ $application->last_input_name }}
+                                                    {{ $formElement->input_label }}
                                                 </th>
                                                 <th>
-                                                    {{ $application->country }}
+                                                    {{ $formElement->input_name }}
                                                 </th>
                                                 <th>
-                                                    {{ $application->phone }}
+                                                    {{ $formElement->input_value ?? $formElement->input_value }}
                                                 </th>
-                                                <th>
-                                                    {{ $application->program }}
-                                                </th>
+
                                                 <td>
-                                                  {{ $application->status }}
+                                                  {{ $formElement->status }}
                                                 </td>
 
                                                 <td>
                                                     @if (Auth::guard('admin')->user()->can('user.index'))
-                                                        <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $application->id }}">
+                                                        <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $formElement->id }}">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
 
 
                                                     <!-- Static Backdrop Modal -->
-                                                        <div class="modal fade" id="staticBackdrop{{ $application->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal fade" id="staticBackdrop{{ $formElement->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <form action="{{ route('admin.application.update',$application->id) }}" method="POST">
+                                                                <form action="" method="POST">
                                                                     @csrf
 
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="staticBackdropLabel">Update Application Status</h5>
+                                                                        <h5 class="modal-title" id="staticBackdropLabel">Update formElement Status</h5>
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
@@ -232,18 +253,18 @@
                                                                                     <select input_name="status" class="form-select  @error('status') is-invalid @enderror">
                                                                                         <option value="">select status</option>
 
-                                                                                        <option disabled value="pending" @if ($application->status == 'pending')
+                                                                                        <option disabled value="pending" @if ($formElement->status == 'pending')
                                                                                             {{ 'selected' }}
                                                                                         @endif>Pending</option>
-                                                                                        <option value="received" @if ($application->status == 'received')
+                                                                                        <option value="received" @if ($formElement->status == 'received')
                                                                                             {{ 'selected' }}
                                                                                         @endif>Received</option>
 
-                                                                                        @if($application->status == "received"|| $application->status == "accept" || $application->status == "accept"  )
-                                                                                        <option value="accept" @if ($application->status == 'accept')
+                                                                                        @if($formElement->status == "received"|| $formElement->status == "accept" || $formElement->status == "accept"  )
+                                                                                        <option value="accept" @if ($formElement->status == 'accept')
                                                                                             {{ 'selected' }}
                                                                                         @endif>Accept</option>
-                                                                                        <option value="declined" @if ($application->status == 'declined')
+                                                                                        <option value="declined" @if ($formElement->status == 'declined')
                                                                                             {{ 'selected' }}
                                                                                         @endif>Declined</option>
                                                                                         @endif
@@ -265,19 +286,16 @@
                                                             </div>
                                                         </div>
 
-                                                        <a href="{{ route('admin.application.show',$application->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-eye" ></i></a>
+
                                                     @endif
-                                                    @if (Auth::guard('admin')->user()->can('user.edit'))
-                                                        <a href="{{ route('admin.application.feedback',$application->id) }}" class="btn btn-sm btn-primary"><i
-                                                            class="fas fa-user-edit" >give feedback</i></a>
-                                                    @endif
+
                                                     @if (Auth::guard('admin')->user()->can('user.destroy'))
-                                                        <a href="{{ route('admin.application.destroy',$application->id) }}"  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>
+                                                        <a href=""  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>
                                                     @endif
 
                                                 </td>
                                             </tr>
-                                        @endforeach  --}}
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -292,19 +310,11 @@
     </div> <!-- container-fluid -->
 </div>
 @section('admin_js')
-    @if (Session::has('application_update_success'))
+    @if (Session::has('form_element_create_success'))
     <script>
             Toast.fire({
                 icon: 'success',
-                title: "{{ Session::get('application_update_success') }}"
-            })
-    </script>
-    @endif
-    @if (Session::has('application_delete_success'))
-    <script>
-            Toast.fire({
-                icon: 'success',
-                title: "{{ Session::get('application_delete_success') }}"
+                title: "{{ Session::get('form_element_create_success') }}"
             })
     </script>
     @endif
@@ -322,6 +332,7 @@
             'use_strict'
             //select box on change event
             $('#is-country').hide()
+            $('#is-mobile').hide()
             $('#add-more-option').hide()
             $(document).on('change','#input-type',function(e){
 
@@ -334,12 +345,20 @@
                         $('#add-more-option').show()
                     }
                     else{
+                        $('#is-mobile').hide()
                         $('#add-input').html(``)
                         $('#add-more-option').hide()
-
                     }
                 }
+                else if($(this).val()=='number'){
+                    $('#is-mobile').show()
+                    $('#add-input').html(``)
+                    $('#add-more-option').hide()
+                    $('#is-country').hide()
+                }
+
                 else{
+                    $('#is-mobile').hide()
                     $('#is-country').hide()
                 }
                 e.preventDefault()

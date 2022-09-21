@@ -15,11 +15,14 @@ class CreateApplicationFormElementsTable extends Migration
     {
         Schema::create('application_form_elements', function (Blueprint $table) {
             $table->id();
-            $table->string('input_name');
+            $table->integer("priority_id")->unique();
+            $table->string('input_name')->unique();
             $table->string('input_type');
+            $table->string('input_label')->unique();
             $table->longText('input_value')->nullable();
             $table->string('is_required')->nullable();
             $table->string('is_country')->nullable();
+            $table->string('is_mobile')->nullable();
             $table->string('status')->default('Active');
             $table->timestamps();
         });
