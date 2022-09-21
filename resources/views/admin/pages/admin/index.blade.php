@@ -92,15 +92,12 @@
                              <table class="table align-middle datatable dt-responsive table-check nowrap" style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">
                                  <thead>
                                  <tr>
-
-
                                      <th style="width:10%">S\N</th>
                                      <th style="width:25%">Name</th>
                                      <th style="width:10%">Role</th>
                                      <th style="width:35%">Email</th>
                                      <th style="10%">Status</th>
                                      <th style="width:10%">Actions</th>
-
                                  </tr>
                                  </thead>
                                  <tbody>
@@ -134,7 +131,6 @@
 
                                                 <a href="{{ route('admin.admin.edit',$admin->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-user-edit" ></i></a>
                                                 @endif
-
 
                                             </td>
                                         </tr>

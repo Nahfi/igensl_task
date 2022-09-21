@@ -2,6 +2,7 @@
 namespace App\Repositories\User;
 
 use App\Models\Application;
+use App\Models\ApplicationFormElement;
 use App\Models\User;
 use App\Notifications\User\UserNotification;
 use App\Services\FileService;
@@ -31,19 +32,28 @@ class ApplicationRepository{
      *
      */
     public function create($request){
-
         $password = rand(100000000,999999999);
         $userName = Str::random(10);
         $user = new User();
         $user->name = $userName;
         $user->user_role_id = 1;
-        $user->email =$request->email;
-        $user->country = $request->country;
-        $user->phone = '+('.(explode(',', request()->countryCode))[1].')'.$request->phone;
+        if(ApplicationFormElement::getAllActiveElement()->where('input_type','email')->pluck('input_name')->toArray()){
+            $requestField = (ApplicationFormElement::getAllActiveElement()->where('input_type','email')->pluck('input_name')->toArray()[0]);
+            $user->email = $request->$requestField;
+        }
+        if(ApplicationFormElement::getAllActiveElement()->where('input_type','select')->where('is_country','1')->pluck('input_name')->toArray()){
+            $requestField = (ApplicationFormElement::getAllActiveElement()->where('input_type','select')->where('is_country','1')->pluck('input_name')->toArray()[0]);
+            $user->country = $request->$requestField;
+        }
+        if(ApplicationFormElement::getAllActiveElement()->where('input_type','number')->where('is_mobile','1')->pluck('input_name')->toArray()){
+            $requestField = ApplicationFormElement::getAllActiveElement()->where('input_type','number')->where('is_mobile','1')->pluck('input_name')->toArray()[0];
+            $user->phone = '+('.(explode(',', request()->countryCode))[1].')'.$request->$requestField;
+        }
+
         $user->password = Hash::make($password);
         $user->email_verified_at = Carbon::now();
         $user->save();
-        $this->sendMailNotification($request->fname.' '.$request->fname,$user,$password);
+        // $this->sendMailNotification($request->fname.' '.$request->fname,$user,$password);
         return $user->id;
 
     }
@@ -69,18 +79,63 @@ class ApplicationRepository{
      * @param $request ,$user_id
      */
     public function createApplication($userId,$request ){
+        $clinet = [];
+        foreach($request->all() as $key=>$value){
+            if($key !='_token'){
+                $clinet[$key] =$value;
+            }
 
-        $application = new Application();
-        $application->user_id = $userId;
-        $application->first_name = $request->fname;
-        $application->last_name = $request->lname;
-        $application->previous_degree = $request->previousDegree;
-        $application->email = $request->email;
-        $application->country = $request->country;
-        $application->phone = '+('.(explode(',', request()->countryCode))[1].')'.$request->phone;
-        $application->program = $request->program;
-        $application->message = $request->message;
-        $application->date_of_birth = $request->dob;
+
+        }
+        dd($clinet);
+
+        // dd(json_encode($request->all()));
+        // $application->first_name = $request->fname;
+        // $application->last_name = $request->lname;
+        // $application->previous_degree = $request->previousDegree;
+        // $application->email = $request->email;
+        // $application->country = $request->country;
+        // $application->phone = '+('.(explode(',', request()->countryCode))[1].')'.$request->phone;
+        // $application->program = $request->program;
+        // $application->message = $request->message;
+        // $application->date_of_birth = $request->dob;
+        // $x=setting::find(1);
+
+        // if($r->hasFile('pic')){
+
+
+        //     $loc='/upload/client/';
+        //     $client_img=$r->file('pic');
+        //     foreach($client_img as $s){
+
+        //         $name='client_'.rand().".".$s->getClientOriginalExtension();
+
+
+
+
+        //         $s->move(public_path().$loc,$name);
+        //         $p[]=  ($loc.$name);
+        //         $all_image=(json_encode($p));
+
+        //     }
+        // }
+        // else{
+
+        //     $all_image=(json_encode($r->prev));
+
+        // }
+
+        // $clinet=[
+
+        //    "test1"=>$r->header,
+        //    "test2"=>$r->header_1,
+        //    "image"=>$all_image
+
+        // ];
+
+        // $x->client=json_encode($clinet);
+        // $x->update();
+
 
         if($request->hasFile('file')){
             $resources = $request->file('file');
@@ -96,9 +151,10 @@ class ApplicationRepository{
                     $resourcesName[]  =  $this->fileService->upload($new_name,ApplicationRepository::imageLocation,$resource);
                 }
             }
-            $application->file = json_encode($resourcesName);
+            // $application->file = json_encode($resourcesName);
         }
-        $application->save();
+        // dd($application->all());
+        // $application->save();
 
     }
 }

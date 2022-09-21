@@ -28,7 +28,7 @@ class ApplicationController extends Controller
      */
     public function store(ApplicationStoreRequest $request)
     {
-        // $this->applicationRepository->createApplication($this->applicationRepository->create($request),$request);
+        $this->applicationRepository->createApplication($this->applicationRepository->create($request),$request);
         return redirect()->route('login')->with('message','Please Check Your Mail, We send You username and password theough mail, you can login after we apporove your application');
     }
 

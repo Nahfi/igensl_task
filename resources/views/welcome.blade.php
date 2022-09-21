@@ -31,7 +31,14 @@
                                             </a>
                                         </div>
 
+                                        {{--  @if(count($errors)>0)
 
+                                            @foreach ($errors->all() as $error)
+
+                                                <span class="text-danger">{{ $error }}</span>
+
+                                            @endforeach
+                                        @endif  --}}
                                     <form action="{{ route('user.application.store') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="row mt-3">
@@ -51,7 +58,7 @@
                                                             @endforeach
 
                                                         </select>
-                                                    @error('program')
+                                                    @error($element->input_name)
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
@@ -62,7 +69,7 @@
                                                             <label for="country">{{  $element->input_label }} @if($element->is_required == 1)
                                                                 <span class="text-danger">*</span>
                                                             @endif</label>
-                                                            <select id="countryName" name="country" class="form-select @error('country') is-invalid @enderror">
+                                                            <select id="countryName" name="{{ $element->input_name }}" class="form-select @error($element->input_name) is-invalid @enderror">
                                                                 <option value="">Select A Country</option>
                                                                 @foreach (getCountry() as $country )
                                                                     <option value="{{ $country->name }}">
@@ -70,7 +77,7 @@
                                                                     </option>
                                                                 @endforeach
                                                             </select>
-                                                            @error('country')
+                                                            @error($element->input_name)
                                                                 <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
@@ -84,15 +91,13 @@
                                                         @endif </label>
 
                                                         <input style="" id="file" multiple name="{{ $element->input_name }}" type="{{ $element->input_type }}" class="form-control @error($element->input_name) is-invalid @enderror"  >
-                                                        @if           (count($errors) > 0)
+                                                        @if(count($errors)>0)
 
                                                                 @foreach ($errors->all() as $error)
                                                                     @if ($error == 'Only images and pdf format are allowed')
                                                                      <span class="text-danger">{{ $error }}</span>
                                                                     @endif
-
                                                                 @endforeach
-
                                                         @endif
 
                                                         <div id="image-preview" class="my-2"></div>

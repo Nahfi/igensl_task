@@ -52,6 +52,14 @@ class ApplicationFromCreateRequest extends FormRequest
                     'priority_id'=>'required|unique:application_form_elements,priority_id',
                 ];
             }
+            if(request()->input_type == 'email'){
+                return [
+                    'input_label'=>'required|unique:application_form_elements,input_label',
+                    'input_type'=>'required|unique:application_form_elements,input_type',
+                    'status'=>'required|in:Active,Deactive',
+                    'priority_id'=>'required|unique:application_form_elements,priority_id',
+                ];
+            }
             else{
                 return [
                     'input_label'=>'required|unique:application_form_elements,input_label',

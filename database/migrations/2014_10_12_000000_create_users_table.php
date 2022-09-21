@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('country')->default('Bangladesh');
+            $table->string('country')->nullable();
             $table->longText('phone')->nullable();
             $table->longText('address')->nullable();
             $table->string('status')->default('DeActive');

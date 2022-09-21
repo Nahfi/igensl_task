@@ -21,6 +21,7 @@ class AdminSeeder extends Seeder
         if(!($admin)){
            $admin =  Admin::create([
                 'name' => 'SuperAdmin',
+                'country' =>'BANGLADESH',
                 'email' => 'superadmin@example.com',
                 'password' => Hash::make('123456789'),
                 'status' => 'Active'

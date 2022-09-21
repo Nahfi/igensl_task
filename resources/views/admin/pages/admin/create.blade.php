@@ -35,11 +35,7 @@
                 <div class="card">
                     <div class="card-body">
                          <div class="row align-items-center">
-                             {{-- @if(Session::has('role_and_permission_assign_success'))
-                                 <div class="alert alert-success">
-                                    {{ Session::get('role_and_permission_assign_success') }}
-                                 </div>
-                             @endif --}}
+
                           <form action="{{ route('admin.admin.store') }}" method="POST" enctype="multipart/form-data">
                               @csrf
                               <div class="row">

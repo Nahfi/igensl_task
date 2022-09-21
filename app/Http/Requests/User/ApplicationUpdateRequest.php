@@ -36,13 +36,11 @@ class ApplicationUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-
             'fname.required'=>'Please Enter Your First Name',
             'lname.required'=>'Please Enter Your Last Name',
             'previousDegree.required'=>'Please Enter Your Previous Degree',
             'email.required'=>'Please Enter Your Email',
             'file.*.mimes' => 'Only images and pdf format are allowed',
-
         ];
     }
 }
