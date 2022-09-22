@@ -38,6 +38,9 @@ class ApplicationStoreRequest extends FormRequest
                 if(request()->hasFile('file')){
                     $validation ['file.*']= 'mimes:png,jpg,jepg,webp,pdf';
                 }
+                else{
+                    $validation ['file']= $required;
+                }
             }
             else if($input->input_type == 'select'){
                 if($input->is_country == 1){
@@ -63,12 +66,12 @@ class ApplicationStoreRequest extends FormRequest
             }
 
         }
-        return $validation;
+         return ($validation);
     }
     public function messages()
     {
         return [
-            'file.*.mimes' => 'Only images and pdf format are allowed',
+            'file.*.mimes' => 'Only images and pdf format are allowed ',
         ];
     }
 

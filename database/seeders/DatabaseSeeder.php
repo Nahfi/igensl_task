@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
             GeneralSettingsSeeder::class,
             AdminSeeder::class,
             CountrySeeder::class,
-            UserRolePermissionSeeder::class
-
+            UserRolePermissionSeeder::class,
+            MailSettingSeeder::class
         ]);
     }
 }

@@ -17,7 +17,7 @@ class CreateApplicationsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->longText('json_data')->nullabel();
-
+            $table->string('status')->default('pending');
             // $table->string('first_name');
             // $table->string('last_name');
             // $table->string('previous_degree');
@@ -27,7 +27,7 @@ class CreateApplicationsTable extends Migration
             // $table->string('program');
             // $table->longText('file')->nullable();
             // $table->longText('message')->nullable();
-            // $table->string('status')->default('pending');
+
             // $table->timestamp('date_of_birth');
             $table->timestamps();
         });

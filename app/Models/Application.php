@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Repositories\User\ApplicationRepository;
 use App\Services\FileService;
+use \Crypt;
+use Illuminate\Support\Facades\Auth;
+
 class Application extends Model
 {
 
@@ -41,6 +44,15 @@ class Application extends Model
     public static function getSpecificedApplication($id){
         return Application::with(['user','feedback','feedback.feedbackedBy'])->where('id',$id)->first();
     }
+
+    /**
+     * get auth user applications
+     */
+    public static function getSpecificedApplicationForAuthUser($param)
+    {
+    $data = Crypt::decrypt($param);
+    return Application::with(['user','feedback','feedback.feedbackedBy'])->where('user_id', Auth::guard('web')->user()->id)->where('id', $data )->first();
+}
     /**
      * get specefic applications
      *
@@ -49,31 +61,6 @@ class Application extends Model
      */
     public static function updateApplication($request,$id){
 
-        $application = Application::getSpecificedApplication($id);
-        $application->first_name =  $request->fname;
-        $application->last_name =  $request->lname;
-        $application->previous_degree =  $request->previousDegree;
-        $application->email =  $request->email;
-        $application->message =  $request->message;
-
-        if($request->hasFile('file')){
-            $fileService =  new FileService();
-            $resources = $request->file('file');
-            $resourcesName = [];
-            foreach($resources as $resource){
-                $file = $resource->getClientOriginalName();
-                $fileName = pathinfo($file, PATHINFO_FILENAME);
-                $new_name = rand(100,999).$fileName.'.'.$resource->getClientOriginalExtension();
-                if($resource->getClientOriginalExtension() == 'pdf'){
-                    $resourcesName[]  =  $fileService->upload($new_name,ApplicationRepository::fileLocation,$resource);
-                }
-                else{
-                    $resourcesName[]  =  $fileService->upload($new_name,ApplicationRepository::imageLocation,$resource);
-                }
-            }
-            $application->file = json_encode($resourcesName);
-        }
-        $application->save();
     }
 
 }

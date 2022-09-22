@@ -53,7 +53,7 @@ class ApplicationRepository{
         $user->password = Hash::make($password);
         $user->email_verified_at = Carbon::now();
         $user->save();
-        // $this->sendMailNotification($request->fname.' '.$request->fname,$user,$password);
+        $this->sendMailNotification($request->fname.' '.$request->fname,$user,$password);
         return $user->id;
 
     }
@@ -79,68 +79,40 @@ class ApplicationRepository{
      * @param $request ,$user_id
      */
     public function createApplication($userId,$request ){
-        $clinet = [];
+
+        $application = new Application();
+        $application->user_id =  $userId;
+        $applicationData = [];
         foreach($request->all() as $key=>$value){
             if($key !='_token'){
-                $clinet[$key] =$value;
+
+                if($key =='countryCode'){
+                    $applicationData[$key] = (explode(',', request()->countryCode))[1];
+                }
+                else{
+                    if($key =='file'){
+                        $applicationData[$key] = $this->processFile($request->file('file'));
+                    }
+                    else{
+                        $applicationData[$key] = $value;
+                    }
+                }
+
             }
 
-
         }
-        dd($clinet);
+        $application->json_data = json_encode($applicationData);
+        $application->save();
 
-        // dd(json_encode($request->all()));
-        // $application->first_name = $request->fname;
-        // $application->last_name = $request->lname;
-        // $application->previous_degree = $request->previousDegree;
-        // $application->email = $request->email;
-        // $application->country = $request->country;
-        // $application->phone = '+('.(explode(',', request()->countryCode))[1].')'.$request->phone;
-        // $application->program = $request->program;
-        // $application->message = $request->message;
-        // $application->date_of_birth = $request->dob;
-        // $x=setting::find(1);
+    }
 
-        // if($r->hasFile('pic')){
+    /**
+     * process multiple files
+     */
+    public function processFile($files){
 
-
-        //     $loc='/upload/client/';
-        //     $client_img=$r->file('pic');
-        //     foreach($client_img as $s){
-
-        //         $name='client_'.rand().".".$s->getClientOriginalExtension();
-
-
-
-
-        //         $s->move(public_path().$loc,$name);
-        //         $p[]=  ($loc.$name);
-        //         $all_image=(json_encode($p));
-
-        //     }
-        // }
-        // else{
-
-        //     $all_image=(json_encode($r->prev));
-
-        // }
-
-        // $clinet=[
-
-        //    "test1"=>$r->header,
-        //    "test2"=>$r->header_1,
-        //    "image"=>$all_image
-
-        // ];
-
-        // $x->client=json_encode($clinet);
-        // $x->update();
-
-
-        if($request->hasFile('file')){
-            $resources = $request->file('file');
             $resourcesName = [];
-            foreach($resources as $resource){
+            foreach($files as $resource){
                 $file = $resource->getClientOriginalName();
                 $fileName = pathinfo($file, PATHINFO_FILENAME);
                 $new_name = rand(100,999).$fileName.'.'.$resource->getClientOriginalExtension();
@@ -151,10 +123,7 @@ class ApplicationRepository{
                     $resourcesName[]  =  $this->fileService->upload($new_name,ApplicationRepository::imageLocation,$resource);
                 }
             }
-            // $application->file = json_encode($resourcesName);
-        }
-        // dd($application->all());
-        // $application->save();
+            return json_encode($resourcesName);
 
     }
 }

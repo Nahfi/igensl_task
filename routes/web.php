@@ -113,6 +113,7 @@ use App\Http\Controllers\Admin\UserRoleController;
                 });
                 Route::controller(ConfigSettingsController::class)->group(function(){
                     Route::get('/config','configSettings')->name('config');
+                    Route::post('/mail','configMailSetting')->name('config.mail');
                     Route::get('/config-optimize-clear','optimizeClear')->name('config.optimize.clear');
                     Route::get('/config-optimize','optimize')->name('config.optimize');
                 });

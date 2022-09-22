@@ -363,7 +363,7 @@
                 }
                 e.preventDefault()
             })
-            //add more row opti
+            //add more row option
             $(document).on('click','#add-more-option',function(e){
 
                 let randSelector = genarateRandomId()
@@ -405,7 +405,6 @@
 
                 }
             }
-
 
             //genarate random it
             function genarateRandomId(){

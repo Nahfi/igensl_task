@@ -69,40 +69,55 @@
                                 <table id="datatable-buttons" class="table table-bordered dt-responsive  nowrap w-100" style="height: 10px;">
                                     <thead>
                                     <tr>
-
                                         <th>S\N</th>
-                                        <th>Firtst Name</th>
-                                        <th>Last Name</th>
-                                        <th>Country</th>
-                                        <th>Phone</th>
-                                        <th>Program</th>
+
+
+                                        @foreach($applications as $application)
+                                         @if($loop->iteration == 2)
+                                            @break;
+                                         @endif
+                                            @foreach (json_decode($application->json_data) as $key=>$value )
+                                                @if($loop->iteration == 4)
+                                                   @break;
+                                                    @else
+                                                        @if($key != 'file')
+                                                                @if($key != 'countryCode')
+                                                                 <th>{{ $key }}</th>
+                                                                @endif
+                                                        @endif
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        {{--  @foreach($applications as $application)
+
+                                        @foreach($applications as $application)
                                             <tr>
 
                                                 <th>{{ $loop->iteration }}</th>
-                                                <th>
-                                                    {{ $application->first_name }}
-                                                </th>
-                                                <th>
-                                                    {{ $application->last_name }}
-                                                </th>
-                                                <th>
-                                                    {{ $application->country }}
-                                                </th>
-                                                <th>
-                                                    {{ $application->phone }}
-                                                </th>
-                                                <th>
-                                                    {{ $application->program }}
-                                                </th>
-                                                <td>
-                                                  {{ $application->status }}
-                                                </td>
+
+                                                @foreach (json_decode($application->json_data) as $key=>$value )
+                                                    @if($loop->iteration == 4)
+                                                      @break;
+                                                    @else
+                                                        @if($key != 'file')
+                                                            @if($key != 'countryCode')
+                                                                @if($key == 'phone')
+                                                                   <th>({{ json_decode($application->json_data)->countryCode }}) {{ $value }}</th>
+                                                                @else
+                                                                  <th>{{ $value }}</th>
+                                                                @endif
+
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+
+                                                <th>{{ $application->status }}</th>
 
                                                 <td>
                                                     @if (Auth::guard('admin')->user()->can('user.index'))
@@ -175,7 +190,7 @@
 
                                                 </td>
                                             </tr>
-                                        @endforeach  --}}
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

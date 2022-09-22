@@ -1,24 +1,23 @@
 @extends('layouts.user.user_app')
 @section('user_page_title')
-Home
-@endsection
-@section('home_active')
-    mm-active
+    show application | Task
 @endsection
 
 @section('user_content')
 <div class="page-content">
     <div class="container-fluid">
+
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18"> Dashboard</h4>
+                    <h4 class="mb-sm-0 font-size-18">Application</h4>
 
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
-                            <li class="breadcrumb-item active">Home</li>
+                            <li class="breadcrumb-item"><a href="{{ route('user.home') }}">Application</a></li>
+
+                            <li class="breadcrumb-item active">Show Application</li>
                         </ol>
                     </div>
 
@@ -26,87 +25,101 @@ Home
             </div>
         </div>
         <!-- end page title -->
-        <span class="bg-danger">
-            <h3 class="bg-success">
-                for edit and view opition if admin give permission you can see show and edit icon
-            </h3>
-         </span>
-        @if (Auth::guard('web')->user()->application->first()->status !='accept')
-         <span class="bg-danger">
-            <h3 class="bg-danger">
-                You Have an Application After Admin Accept Your Application And give Permission to view or edit the Application then You Can Access
-            </h3>
-         </span>
-        @else
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="card">
+                    @if($application == 'none')
+                      'Sorry You Dont Have Permission To View The Applications, Please Wait'
 
+                      @else   <div class="card-body">
+                        <img style="width:100px;height:100px;" class="rounded-circle" src="{{ asset('photo/user_profile') }}/{{ $application->user->photo }}" alt="profile">
+                        <hr>
+                        <hr>
+                        <table class="table table-bordered text-center">
+                            <tbody>
+                                <tr>
+                                    @foreach ((json_decode($application->json_data)) as $key=>$value )
+                                        <tr>
+                                                @if ($key != 'file')
 
-            <div class="col-lg-8">
-                <div style="height: calc(100vh - 270px);overflow-y:scroll;overflow-x:hidden;">
+                                                    @if($key != 'countryCode')
+                                                        @if($key == 'phone')
+                                                        <th>{{Str::ucfirst($key)}}:</th>
+                                                        <td>({{ json_decode($application->json_data)->countryCode }}) {{ $value }}</td>
+                                                        @else
+                                                            <th>{{ ucfirst(str_replace('_', ' ', $key)) }}:</th>
 
-                    {{--  {{ Auth::guard('web')->user()->userRole->userPermissions->pluck('name') }}
-                      --}}
+                                                            <td>{{ $value }}</td>
+                                                    @endif
 
-                    <table id="datatable-buttons" class="table table-bordered dt-responsive  nowrap w-100" style="height: 10px;">
-                        <thead>
-                        <tr>
-                            <th>Firtst Name</th>
-                            <th>Last Name</th>
-                            <th>Country</th>
-                            <th>Phone</th>
-                            <th>Program</th>
+                                                @endif
+                                            @endif
 
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                                        </tr>
+                                    @endforeach
 
                                 <tr>
-                                    <th>
-                                        {{ Auth::guard('web')->user()->application->first()->first_name }}
-                                    </th>
-                                    <th>
-                                        {{ Auth::guard('web')->user()->application->first()->last_name }}
-                                    </th>
-                                    <th>
-                                        {{ Auth::guard('web')->user()->application->first()->country }}
-                                    </th>
-                                    <th>
-                                        {{ Auth::guard('web')->user()->application->first()->phone }}
-                                    </th>
-                                    <th>
-                                        {{ Auth::guard('web')->user()->application->first()->program }}
-                                    </th>
+                                    <th>Status:</th>
 
-
-                                    <td>
-                                        @if (in_array('application.view',Auth::guard('web')->user()->userRole->userPermissions->pluck('name')->toArray()))
-
-                                        <a href="{{route('user.application.show',Auth::guard('web')->user()->application->first()->id)}}" class="btn btn-sm btn-primary"><i class="fas fa-eye" ></i>show Details</a>
-
-
-                                        @endif
-                                        @if (in_array('application.edit',Auth::guard('web')->user()->userRole->userPermissions->pluck('name')->toArray()))
-                                        <a href="{{route('user.application.edit',Auth::guard('web')->user()->application->first()->id)}}" class="btn btn-sm btn-primary"><i
-                                            class="fas fa-user-edit" >edit</i></a>
-                                        @endif
-
-
-
-
-
-
-
-                                    </td>
+                                    {{--  <td>{{ $application->status }}</td>  --}}
+                                    <td> <span class="badge {{ ($application->status == 'accept' ? "bg-success":"bg-danger")  }}">{{ $application->status }}</span></td>
                                 </tr>
+                            </tbody>
 
-                        </tbody>
-                    </table>
+                        </table>
+
+                        <h2> Files/Images</h2>
+                        @if(json_decode(json_decode($application->json_data)->file))
+                            @foreach (json_decode(json_decode($application->json_data)->file) as $file )
+
+                                @if(substr($file, -4) =='.pdf')
+                                        <a class="btn my-2  btn-primary me-3" href="{{ route('user.application.download',$file) }}">
+                                            {{ substr($file,3) }}
+                                            <i class="ms-1 fas fa-download"></i>
+                                        </a>
+                                    @else
+                                        <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/'.$file) }}" alt="{{ $file }}">
+
+                                @endif
+                        @endforeach
+                       @endif
+
+                        <h1 class="mt-3"> FEEDBACK</h1>
+                        @if($application->feedback)
+                          @foreach ($application->feedback as $feedback )
+                          <h1> feebacked By : :{{ $feedback->feedbackedBy->name }}</h1>
+                          <h3>Comment :{{ $feedback->comment }}</h3>
+                          <h2>files/image</h2>
+                          @if(json_decode($feedback->file))
+
+                                @foreach (json_decode($feedback->file) as $file )
+
+                                    @if(substr($file, -4) =='.pdf')
+
+                                        <a class="btn my-2  btn-primary me-3" href="{{ route('user.application.feedback.download',$file) }}">
+                                            {{ substr($file,3) }}
+                                        <i  class="ms-1 fas fa-download"></i>
+                                        </a>
+
+                                    @else
+                                            <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/feedback/'.$file) }}" alt="{{ $file }}">
+                                    @endif
+
+                                @endforeach
+
+                          @endif
+                          @endforeach
+                        @endif
+
+
+                    </div>
+                    @endif
+
                 </div>
             </div>
-
-        @endif
-
+        </div>
 
     </div> <!-- container-fluid -->
 </div>
+
 @endsection

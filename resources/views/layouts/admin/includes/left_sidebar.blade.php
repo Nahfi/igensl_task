@@ -51,6 +51,7 @@
                         </ul>
                     </li>
                @endif
+
                @if (Auth::guard('admin')->user()->can('user.index') || Auth::guard('admin')->user()->can('role.index'))
                     <li class="@yield('application_active')">
                         <a href="javascript: void(0);" class="has-arrow" >

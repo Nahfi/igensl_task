@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Repositories\User\ApplicationRepository;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use \Crypt;
+
 class ApplicationController extends Controller
 {
     /**
@@ -20,6 +22,11 @@ class ApplicationController extends Controller
     const feedbackFileLocation = "/file/applications/feedback/";
     public $user,$applicationRepository;
     public function __construct(ApplicationRepository $applicationRepository){
+
+        $this->middleware(function($request,$next){
+            $this->user = Auth::guard('web')->User();
+            return $next($request);
+        });
         $this->applicationRepository = $applicationRepository;
     }
 
@@ -28,6 +35,9 @@ class ApplicationController extends Controller
      */
     public function store(ApplicationStoreRequest $request)
     {
+        if(is_null($this->user)){
+            abort(403,'Unauthorized access');
+        }
         $this->applicationRepository->createApplication($this->applicationRepository->create($request),$request);
         return redirect()->route('login')->with('message','Please Check Your Mail, We send You username and password theough mail, you can login after we apporove your application');
     }
@@ -53,39 +63,23 @@ class ApplicationController extends Controller
      * show a specific application
      */
     public function show($id){
-        if (!in_array('application.view',Auth::guard('web')->user()->userRole->userPermissions->pluck('name')->toArray())){
+        if(is_null($this->user) || !in_array('application.view',Auth::guard('web')->user()->userRole->userPermissions->pluck('name')->toArray())){
             abort(403,'Unauthorized access');
         }
-        $application = Application::getSpecificedApplication($id);
-        return view('user.pages.application.show',[
-            'application' => $application
-        ]);
-    }
 
-    /**
-     * edit a specific application
-     */
-    public function edit($id){
-        if (!in_array('application.edit',Auth::guard('web')->user()->userRole->userPermissions->pluck('name')->toArray())){
+        $parameter= Crypt::encrypt($id);
+        $application = Application::getSpecificedApplicationForAuthUser($parameter);
+        if($application){
+            return view('user.pages.application.show',[
+                'application' => $application
+            ]);
+        }
+        else{
             abort(403,'Unauthorized access');
         }
-        $application = Application::getSpecificedApplication($id);
-        return view('user.pages.application.edit',[
-            'application' => $application
-        ]);
+
     }
 
-    /**
-     * update a specific application
-     */
-    public function update(ApplicationUpdateRequest $request,$id){
-
-        if (!in_array('application.edit',Auth::guard('web')->user()->userRole->userPermissions->pluck('name')->toArray())){
-            abort(403,'Unauthorized access');
-        }
-        Application::updateApplication($request,$id);
-        return back()->with('application_update','Application Update Success');
-    }
 
     /**
      * download a specific pdf file

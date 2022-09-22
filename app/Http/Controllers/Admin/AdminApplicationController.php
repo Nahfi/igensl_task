@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\FeedBackStoreRequest;
 use App\Models\Application;
+use App\Models\ApplicationFormElement;
 use App\Repositories\Admin\ApplicationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,10 +34,9 @@ class AdminApplicationController extends Controller
         if(is_null($this->user) || !$this->user->can('user.index')){
             abort(403,'Unauthorized access');
         }
-        $applications = $this->applicationRepository->index();
-
         return view('admin.pages.application.index',[
-            'applications' => $applications,
+            'applications' => $this->applicationRepository->index(),
+            'inputLabels'=>ApplicationFormElement::getAllActiveElement()
         ]);
     }
 

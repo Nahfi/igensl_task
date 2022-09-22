@@ -30,15 +30,6 @@
 
                                             </a>
                                         </div>
-
-                                        {{--  @if(count($errors)>0)
-
-                                            @foreach ($errors->all() as $error)
-
-                                                <span class="text-danger">{{ $error }}</span>
-
-                                            @endforeach
-                                        @endif  --}}
                                     <form action="{{ route('user.application.store') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="row mt-3">
@@ -99,6 +90,11 @@
                                                                     @endif
                                                                 @endforeach
                                                         @endif
+                                                        <div class="mt-3 div">
+                                                            @error('file')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
 
                                                         <div id="image-preview" class="my-2"></div>
                                                         <div id="file-preview"></div>
@@ -144,11 +140,7 @@
                                                                         @endforeach
 
                                                                     @endif
-                                                                    <div class="mt-3 div">
-                                                                        @error('phone')
-                                                                        <span class="text-danger">{{ $message }}</span>
-                                                                        @enderror
-                                                                    </div>
+
                                                                 </div>
                                                                 @else
                                                                 <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
@@ -173,11 +165,7 @@
                                                                             @endforeach
 
                                                                         @endif
-                                                                        <div class="mt-3 div">
-                                                                            @error('phone')
-                                                                            <span class="text-danger">{{ $message }}</span>
-                                                                            @enderror
-                                                                        </div>
+
                                                                     </div>
                                                                 @endif
                                                         @else
@@ -217,13 +205,15 @@
                                         @endif
 
                                          @empty
-                                           'No Element Found'
+                                           No Element Found
                                          @endforelse
 
-
+                                         @if(count($formElememts) != 0)
+                                          <button type="submit" class="btn btn-sm btn-primary mt-4">Submit</button>
+                                         @endif
 
                                         </div>
-                                        <button type="submit" class="btn btn-sm btn-primary mt-4">Submit</button>
+
                                     </form>
                                     </div>
                                     <!-- end row -->

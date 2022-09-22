@@ -17,21 +17,21 @@
     <!-- <body data-layout="horizontal"> -->
 
         <!-- Begin page -->
-        <div id="layout-wrapper">
+        <div >
 
            @include('layouts.user.includes.header')
 
             <!-- ========== Left Sidebar Start ========== -->
-              @include('layouts.user.includes.left_sidebar')
+              {{--  @include('layouts.user.includes.left_sidebar')  --}}
             <!-- Left Sidebar End -->
 
             <!-- Start right Content here -->
 
-                <div class="main-content">
+                <div class="">
 
                     @yield('user_content')
                     <!-- End Page-content -->
-                    @include('layouts.user.includes.footer')
+                    {{--  @include('layouts.user.includes.footer')  --}}
                 </div>
 
             <!-- end main content-->

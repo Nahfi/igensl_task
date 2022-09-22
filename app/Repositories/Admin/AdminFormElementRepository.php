@@ -40,6 +40,10 @@ class AdminFormElementRepository{
         if($request->input_type == 'number'){
             if($request->has('is_mobile')){
                 $formBuilder->is_mobile = $request->is_mobile;
+                $formBuilder->input_name = 'phone';
+            }
+            else{
+                $formBuilder->input_name = strtolower($this->clean($request->input_label));
             }
         }
         if ($request->input_type == 'file') {
