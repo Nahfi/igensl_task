@@ -38,7 +38,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">formElements</h4>
+                    <h4 class="mb-sm-0 font-size-18">Form Elements</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
@@ -265,7 +265,8 @@
                                                     @endif
 
                                                     @if (Auth::guard('admin')->user()->can('user.destroy'))
-                                                        <a href="{{ route('admin.application.form.destroy',$formElement->id) }}"  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>
+                                                         <a href="#" value='{{ $formElement->id }}'  class="btn btn-sm btn-danger sweet_delete"> <i class="fas fa-trash-alt"></i></a>
+                                                        {{--  <a href="{{ route('admin.application.form.destroy',$formElement->id) }}"  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>  --}}
                                                     @endif
 
                                                 </td>
@@ -321,6 +322,12 @@
         //jquery start
         $(function(){
             'use_strict'
+            //ajax setup
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             //select box on change event
             $('#is-country').hide()
             $('#is-mobile').hide()
@@ -429,6 +436,41 @@
 
                 e.preventDefault()
             })
+            //sweat delete start
+            $(document).on('click','.sweet_delete',function(){
+                const delete_id = $(this).attr('value');
+                Swal.fire({
+                  title: 'Are you sure?',
+                  text: "You won't be able to revert this!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                      const data = {
+                          "_token": $('input[name=_token]').val(),
+                          "id": delete_id,
+                      };
+                      $.ajax({
+                         type:"GET",
+                         url:`/admin/application/form/destroy/${delete_id}`,
+                         data: data,
+                         success: function (response){
+                         Swal.fire(
+                               'Deleted!',
+                               'Form Element deleted.',
+                               'success'
+                             )
+                             .then((result) =>{
+                                location.reload();
+                             });
+                         }
+                      });
+                  }
+                })
+            });
         })
     </script>
 @endsection

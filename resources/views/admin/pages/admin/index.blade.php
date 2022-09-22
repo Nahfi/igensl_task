@@ -133,7 +133,7 @@
 
                                                 @if (Auth::guard('admin')->User()->id != $admin->id)
                                                     @if (Auth::guard('admin')->User()->can('admin.destroy'))
-                                                        <a href="#" value='{{ $a }}dmin->id }}'  class="btn btn-sm btn-danger sweet_delete"> <i class="fas fa-trash-alt"></i></a>
+                                                        <a href="#" value='{{ $admin->id }}'  class="btn btn-sm btn-danger sweet_delete"> <i class="fas fa-trash-alt"></i></a>
                                                     @endif
                                                 @endif
 
@@ -158,14 +158,16 @@
 </div>
 @section('admin_js')
     <script>
-       $(document).ready(function() {
+       $(function() {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('.sweet_delete').click(function(){
-                var delete_id = $(this).attr('value');
+
+            //sweat delete start
+            $(document).on('click','.sweet_delete',function(){
+                const delete_id = $(this).attr('value');
                 Swal.fire({
                   title: 'Are you sure?',
                   text: "You won't be able to revert this!",
@@ -176,7 +178,7 @@
                   confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                   if (result.isConfirmed) {
-                      var data = {
+                      const data = {
                           "_token": $('input[name=_token]').val(),
                           "id": delete_id,
                       };
@@ -199,9 +201,6 @@
                 })
             });
         } );
-
-
-
 
     </script>
 @endsection

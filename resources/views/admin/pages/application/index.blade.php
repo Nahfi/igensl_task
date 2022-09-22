@@ -144,7 +144,7 @@
                                                                                             {{ 'selected' }}
                                                                                         @endif>Received</option>
 
-                                                                                        @if($application->status == "received"|| $application->status == "accept" || $application->status == "accept"  )
+                                                                                        @if($application->status == "received"|| $application->status == "accept" || $application->status == "declined"  )
                                                                                         <option value="accept" @if ($application->status == 'accept')
                                                                                             {{ 'selected' }}
                                                                                         @endif>Accept</option>
@@ -176,7 +176,8 @@
                                                             class="fas fa-user-edit" >give feedback</i></a>
                                                     @endif
                                                     @if (Auth::guard('admin')->user()->can('user.destroy'))
-                                                        <a href="{{ route('admin.application.destroy',$application->id) }}"  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>
+
+                                                        <a href="#" value='{{ $application->id }}'  class="btn btn-sm btn-danger sweet_delete"> <i class="fas fa-trash-alt"></i></a>
                                                     @endif
 
                                                 </td>
@@ -220,5 +221,55 @@
         })
     </script>
     @endif
+
+    <script>
+        $(function(){
+            'use_strict'
+
+            //ajax setup
+             $.ajaxSetup({
+                 headers: {
+                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                 }
+             });
+
+             //sweat delete
+             $(document).on('click','.sweet_delete',function(){
+                 const delete_id = $(this).attr('value');
+                 Swal.fire({
+                   title: 'Are you sure?',
+                   text: "You won't be able to revert this!",
+                   icon: 'warning',
+                   showCancelButton: true,
+                   confirmButtonColor: '#3085d6',
+                   cancelButtonColor: '#d33',
+                   confirmButtonText: 'Yes, delete it!'
+                 }).then((result) => {
+                   if (result.isConfirmed) {
+                       const data = {
+                           "_token": $('input[name=_token]').val(),
+                           "id": delete_id,
+                       };
+                       $.ajax({
+                          type:"GET",
+                          url:`/admin/application/destroy/${delete_id}`,
+                          data: data,
+                          success: function (response){
+                          Swal.fire(
+                                'Deleted!',
+                                'Applications deleted.',
+                                'success'
+                              )
+                              .then((result) =>{
+                                 location.reload();
+                              });
+                          }
+                       });
+                   }
+                 })
+             });
+         });
+
+     </script>
 @endsection
 @endsection
