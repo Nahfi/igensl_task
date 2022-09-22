@@ -134,9 +134,9 @@
                                                 @if (Auth::guard('admin')->User()->id != $admin->id)
                                                     @if (Auth::guard('admin')->User()->can('admin.destroy'))
                                                         <a href="#" value='{{ $a }}dmin->id }}'  class="btn btn-sm btn-danger sweet_delete"> <i class="fas fa-trash-alt"></i></a>
-                                                    @endif 
+                                                    @endif
                                                 @endif
-                                                
+
 
                                             </td>
                                         </tr>
@@ -165,7 +165,7 @@
                 }
             });
             $('.sweet_delete').click(function(){
-                var delete_id = $(this).closest("tr").find('.admin_val_id').val();
+                var delete_id = $(this).attr('value');
                 Swal.fire({
                   title: 'Are you sure?',
                   text: "You won't be able to revert this!",
@@ -182,7 +182,7 @@
                       };
                       $.ajax({
                          type:"GET",
-                         url:'/admin/destroy/'+delete_id,
+                         url:`/admin/destroy/${delete_id}`,
                          data: data,
                          success: function (response){
                          Swal.fire(
