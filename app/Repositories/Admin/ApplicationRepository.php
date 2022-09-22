@@ -68,9 +68,9 @@ class ApplicationRepository{
      */
     public function sendMailNotification($application,$body){
         $userInfo = [
-            'greeting' => 'Hi '.$application->first_name.',',
+            'greeting' => 'Hi Dear,',
             'body' => $body,
-            'thanks' => 'Thank you this is from task',
+            'thanks' => 'Thank you this is from'.generalSettings()->name,
             'actionText' => 'login',
             'actionURL' => url('/login'),
         ];

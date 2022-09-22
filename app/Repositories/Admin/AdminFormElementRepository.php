@@ -50,14 +50,35 @@ class AdminFormElementRepository{
             $formBuilder->input_name = 'file[]';
         }
         else{
-            $formBuilder->input_name = strtolower($this->clean($request->input_label));
+            if ($request->input_type == 'email') {
+                $formBuilder->input_name = 'email';
+            }
+            else{
+                $formBuilder->input_name = strtolower($this->clean($request->input_label));
+            }
         }
         $formBuilder->input_label = ucfirst(str_replace('_', ' ', $this->clean($request->input_label)));
         $formBuilder->input_type = $request->input_type;
         $formBuilder->priority_id = $request->priority_id;
         $formBuilder->status = $request->status;
         $formBuilder->save();
-
     }
+
+    /**
+     * form bulder status update
+     */
+     public function update($request ,$id){
+        $formElement = $this->findSpecifiFormElement($id);
+        $formElement->status = $request->status;
+        $formElement->save();
+     }
+
+     /**
+      * find specific form element
+      */
+
+      public function findSpecifiFormElement($id){
+        return ApplicationFormElement::where('id',$id)->first();
+      }
 
 }

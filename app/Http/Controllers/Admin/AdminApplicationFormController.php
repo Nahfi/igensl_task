@@ -45,5 +45,38 @@ class AdminApplicationFormController extends Controller
         $this->adminFormElementRepository->create($request);
         return back()->with('form_element_create_success','Application Form Element Create Successfully');
     }
+    /**
+     *  dynamic application status update
+     */
+    public function update(Request $request , $id){
+        if(is_null($this->user) || !$this->user->can('user.update')){
+            abort(403,'Unauthorized access');
+        }
+        $request->validate([
+            'status'=>'required |in:Active,Deactive'
+        ]);
+        $this->adminFormElementRepository->update($request,$id);
+        return back()->with('form_element_update_success','Application Form Element Updated Successfully');
+    }
+    /**
+     *  dynamic application delete
+     */
+    public function destroy($id){
+        if(is_null($this->user) || !$this->user->can('user.destroy')){
+            abort(403,'Unauthorized access');
+        }
+        $this->adminFormElementRepository->findSpecifiFormElement($id)->delete();
+        return back()->with('form_element_delete_success','Application Form Element Deleted Successfully');
+    }
+
+    /**
+     *  check if priority id is exist or not
+     */
+    public function priorityCheck($priorityNumber){
+        $totalElement = ApplicationFormElement::inputElementByPriority($priorityNumber);
+        return json_encode([
+            'totalElement'=>$totalElement
+        ]);
+    }
 
 }

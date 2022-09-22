@@ -128,9 +128,15 @@
 
                                             <td style="width: 10%;">
                                                 @if (Auth::guard('admin')->User()->can('admin.edit'))
-
-                                                <a href="{{ route('admin.admin.edit',$admin->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-user-edit" ></i></a>
+                                                    <a href="{{ route('admin.admin.edit',$admin->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-user-edit" ></i></a>
                                                 @endif
+
+                                                @if (Auth::guard('admin')->User()->id != $admin->id)
+                                                    @if (Auth::guard('admin')->User()->can('admin.destroy'))
+                                                        <a href="#" value='{{ $a }}dmin->id }}'  class="btn btn-sm btn-danger sweet_delete"> <i class="fas fa-trash-alt"></i></a>
+                                                    @endif 
+                                                @endif
+                                                
 
                                             </td>
                                         </tr>

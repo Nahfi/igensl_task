@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Country;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 class CountrySeeder extends Seeder
@@ -13,8 +14,7 @@ class CountrySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('countries')->delete();
-
+        Country::truncate();
         $countries = array(
             array('id' => '1','iso' => 'AF','name' => 'AFGHANISTAN','nicename' => 'Afghanistan','iso3' => 'AFG','numcode' => '4','phonecode' => '93'),
             array('id' => '2','iso' => 'AL','name' => 'ALBANIA','nicename' => 'Albania','iso3' => 'ALB','numcode' => '8','phonecode' => '355'),

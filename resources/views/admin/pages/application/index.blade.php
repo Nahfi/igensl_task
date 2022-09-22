@@ -58,7 +58,6 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <h5 class="card-title me-4" style="float:left;margin-top:5px">Total Applications <span class="text-muted fw-normal ms-2">({{ $applications->count() }})</span></h5>
-
                                     </div>
                                 </div>
 
@@ -70,25 +69,22 @@
                                     <thead>
                                     <tr>
                                         <th>S\N</th>
-
-
                                         @foreach($applications as $application)
-                                         @if($loop->iteration == 2)
-                                            @break;
-                                         @endif
-                                            @foreach (json_decode($application->json_data) as $key=>$value )
-                                                @if($loop->iteration == 4)
-                                                   @break;
+                                            @if($loop->iteration == 2)
+                                                @break;
+                                            @endif
+                                                @foreach (json_decode($application->json_data) as $key=>$value )
+                                                    @if($loop->iteration == 4)
+                                                        @break;
                                                     @else
                                                         @if($key != 'file')
                                                                 @if($key != 'countryCode')
-                                                                 <th>{{ $key }}</th>
+                                                                <th>{{ ucfirst(str_replace('_', ' ', $key)) }}</th>
                                                                 @endif
                                                         @endif
-                                                @endif
-                                            @endforeach
+                                                    @endif
+                                                @endforeach
                                         @endforeach
-
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -97,9 +93,7 @@
 
                                         @foreach($applications as $application)
                                             <tr>
-
                                                 <th>{{ $loop->iteration }}</th>
-
                                                 @foreach (json_decode($application->json_data) as $key=>$value )
                                                     @if($loop->iteration == 4)
                                                       @break;
@@ -116,22 +110,20 @@
                                                         @endif
                                                     @endif
                                                 @endforeach
-
-                                                <th>{{ $application->status }}</th>
-
+                                                <td> <span class="badge {{ ($application->status == 'accept' ? "bg-success":"bg-danger")  }}
+                                                    {{ ($application->status == 'received' ? "bg-success":"bg-danger")  }}
+                                                    ">{{ $application->status }}</span></td>
                                                 <td>
                                                     @if (Auth::guard('admin')->user()->can('user.index'))
                                                         <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $application->id }}">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
 
-
                                                     <!-- Static Backdrop Modal -->
                                                         <div class="modal fade" id="staticBackdrop{{ $application->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                                 <form action="{{ route('admin.application.update',$application->id) }}" method="POST">
                                                                     @csrf
-
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="staticBackdropLabel">Update Application Status</h5>
@@ -177,7 +169,6 @@
                                                             </form>
                                                             </div>
                                                         </div>
-
                                                         <a href="{{ route('admin.application.show',$application->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-eye" ></i></a>
                                                     @endif
                                                     @if (Auth::guard('admin')->user()->can('user.edit'))

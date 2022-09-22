@@ -15,4 +15,11 @@ class ApplicationFormElement extends Model
      public static function getAllActiveElement(){
         return ApplicationFormElement::where('status','Active')->orderBy('priority_id', 'ASC')->get();
      }
+
+    /**
+     * get element by priority
+     */
+     public static function inputElementByPriority($priorityNumber){
+        return ApplicationFormElement::where('priority_id',$priorityNumber)->count();
+     }
 }

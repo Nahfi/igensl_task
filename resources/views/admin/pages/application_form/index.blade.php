@@ -138,19 +138,9 @@
 
                                                                 <div class="col-12 mb-4">
                                                                     <div class="form-group">
-                                                                        <label for="priority_id">Priority <span class="text-danger">*</span></label>
-                                                                        <select name="priority_id" id="priority_id" class="form-select  @error('priority_id') is-invalid @enderror">
-                                                                            <option selected value="">Select Priority</option>
-                                                                            //ajax diye check kora lagbe
-                                                                            @for($i = 1; $i <= 50; $i++)
-                                                                                @if(!in_array($i,$existsPriorityIds))
-                                                                                <option  value="{{ $i }}" >{{ $i }}</option>
-                                                                                @endif
-                                                                            @endfor
-                                                                        </select>
-                                                                        @error('priority_id')
-                                                                            <span class="text-danger">{{ $message }}</span>
-                                                                        @enderror
+                                                                        <label for="priority-id">Priority <span class="text-danger">*</span></label>
+                                                                        <input  type="number" name="priority_id" id="priority-id" class="form-control"  >
+                                                                            <span id="priority-error" class="text-danger"></span>
                                                                     </div>
                                                                   </div>
 
@@ -168,11 +158,8 @@
                                                                   </div>
                                                                 </div>
 
-                                                                <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                                                                <button type="submit" class="btn btn-sm btn-primary mb-2">Submit</button>
                                                             </div>
-
-
-
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
@@ -195,11 +182,10 @@
                                 <table id="datatable-buttons" class="table table-bordered dt-responsive  nowrap w-100" style="height: 10px;">
                                     <thead>
                                     <tr>
-
                                         <th>S\N</th>
                                         <th>Input Type </th>
                                         <th>Input Label</th>
-                                        <th>input_name</th>
+                                        <th>input Name</th>
                                         <th>Input Value</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -208,23 +194,22 @@
                                     <tbody>
                                         @foreach($formElements as $formElement)
                                             <tr>
-
-                                                <th>{{ $loop->iteration }}</th>
-                                                <th>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
                                                     {{ $formElement->input_type }}(Requred  :{{ $formElement->is_required == 1 ? "True" :'False' }})
-                                                </th>
-                                                <th>
+                                                </td>
+                                                <td>
                                                     {{ $formElement->input_label }}
-                                                </th>
-                                                <th>
+                                                </td>
+                                                <td>
                                                     {{ $formElement->input_name }}
-                                                </th>
-                                                <th>
-                                                    {{ $formElement->input_value ?? $formElement->input_value }}
-                                                </th>
+                                                </td>
+                                                <td>
+                                                    {{ $formElement->input_value?$formElement->input_value :'no value'}}
+                                                </td>
 
                                                 <td>
-                                                  {{ $formElement->status }}
+                                                   <span class="badge {{ ($formElement->status == 'Active' ? "bg-success":"bg-danger")  }}">{{ $formElement->status }}</span>
                                                 </td>
 
                                                 <td>
@@ -237,12 +222,11 @@
                                                     <!-- Static Backdrop Modal -->
                                                         <div class="modal fade" id="staticBackdrop{{ $formElement->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <form action="" method="POST">
+                                                                <form action="{{ route('admin.application.form.update',$formElement->id) }}" method="POST">
                                                                     @csrf
-
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="staticBackdropLabel">Update formElement Status</h5>
+                                                                        <h5 class="modal-title" id="staticBackdropLabel">Update Form Element Status</h5>
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
@@ -250,24 +234,15 @@
                                                                             <div class="col-12">
                                                                                 <div class="form-group">
                                                                                     <label>status <span class="text-danger">*</span> </label>
-                                                                                    <select input_name="status" class="form-select  @error('status') is-invalid @enderror">
+                                                                                    <select name="status" class="form-select  @error('status') is-invalid @enderror">
                                                                                         <option value="">select status</option>
 
-                                                                                        <option disabled value="pending" @if ($formElement->status == 'pending')
+                                                                                        <option  value="Active" @if ($formElement->status == 'Active')
                                                                                             {{ 'selected' }}
-                                                                                        @endif>Pending</option>
-                                                                                        <option value="received" @if ($formElement->status == 'received')
+                                                                                        @endif>Active</option>
+                                                                                        <option  value="Deactive" @if ($formElement->status == 'Deactive')
                                                                                             {{ 'selected' }}
-                                                                                        @endif>Received</option>
-
-                                                                                        @if($formElement->status == "received"|| $formElement->status == "accept" || $formElement->status == "accept"  )
-                                                                                        <option value="accept" @if ($formElement->status == 'accept')
-                                                                                            {{ 'selected' }}
-                                                                                        @endif>Accept</option>
-                                                                                        <option value="declined" @if ($formElement->status == 'declined')
-                                                                                            {{ 'selected' }}
-                                                                                        @endif>Declined</option>
-                                                                                        @endif
+                                                                                        @endif>Deactive</option>
 
                                                                                     </select>
                                                                                     @error('status')
@@ -290,7 +265,7 @@
                                                     @endif
 
                                                     @if (Auth::guard('admin')->user()->can('user.destroy'))
-                                                        <a href=""  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>
+                                                        <a href="{{ route('admin.application.form.destroy',$formElement->id) }}"  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>
                                                     @endif
 
                                                 </td>
@@ -315,6 +290,22 @@
             Toast.fire({
                 icon: 'success',
                 title: "{{ Session::get('form_element_create_success') }}"
+            })
+    </script>
+    @endif
+    @if (Session::has('form_element_update_success'))
+    <script>
+            Toast.fire({
+                icon: 'success',
+                title: "{{ Session::get('form_element_update_success') }}"
+            })
+    </script>
+    @endif
+    @if (Session::has('form_element_delete_success'))
+    <script>
+            Toast.fire({
+                icon: 'success',
+                title: "{{ Session::get('form_element_delete_success') }}"
             })
     </script>
     @endif
@@ -373,7 +364,7 @@
                                 <div class="form-group mt-2 mb-2">
                                     <input required placeholder="option value" type="text" class="form-control @error('input_value') is-invalid @enderror" name="input_value[]" multiple id="input_value" value="{{ old('input_value') }}">
                                 </div>
-                                <a value="${randSelector}" id="delete-option-item" class="text-center btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                <a value="${randSelector}" id="delete-option-item" class="text-center btn btn-sm btn-danger mb-2"><i class="fas fa-trash-alt"></i></a>
                             </div>
                             `
                         )
@@ -405,11 +396,39 @@
 
                 }
             }
-
             //genarate random it
             function genarateRandomId(){
                 return Math.round(new Date().getTime() + (Math.random() * 100));
             }
+
+            // priority check
+            $(document).on('keyup','#priority-id',function(e){
+                const priorityNumber = ($(this).val())
+                //csrf token setup
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                //ajax call for check priority
+                    $.ajax({
+                            method:'get',
+                            url:`/admin/application/form/priority-check/${priorityNumber}`,
+                            dataType:'json'
+                        }).then(reponse =>{
+                            if(reponse.totalElement != 0)
+                            {
+                                $('#priority-id').val('')
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: 'This Priority Number Is Already Taken, Try Another'
+                                })
+                            }
+
+                        })
+
+                e.preventDefault()
+            })
         })
     </script>
 @endsection

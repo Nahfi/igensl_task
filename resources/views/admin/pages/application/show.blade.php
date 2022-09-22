@@ -31,7 +31,7 @@
             <div class="col-12 text-center">
                 <div class="card">
                     <div class="card-body">
-                        {{--  <img style="width:100px;height:100px;" class="rounded-circle" src="{{ asset('photo/user_profile') }}/{{ $application->user->photo }}" alt="profile">  --}}
+                        <img style="width:100px;height:100px;" class="rounded-circle" src="{{ asset('photo/user_profile') }}/{{ $application->user->photo }}" alt="profile">
                         <hr>
                         <hr>
                         <table class="table table-bordered text-center">
@@ -40,13 +40,14 @@
                                     @foreach ((json_decode($application->json_data)) as $key=>$value )
                                         <tr>
                                                 @if ($key != 'file')
-
                                                     @if($key != 'countryCode')
                                                         @if($key == 'phone')
-                                                        <th>{{ $key }}:</th>
+                                                        <th>{{ ucfirst(str_replace('_', ' ', $key)) }}:
+                                                        </th>
                                                         <td>({{ json_decode($application->json_data)->countryCode }}) {{ $value }}</td>
                                                         @else
-                                                            <th>{{ $key }}:</th>
+                                                        <th>{{ ucfirst(str_replace('_', ' ', $key)) }}:
+                                                        </th>
                                                             <td>{{ $value }}</td>
                                                     @endif
 
@@ -65,13 +66,9 @@
 
                         </table>
 
-
-
                         <h2> Files/Images</h2>
 
-
-
-                        @if(json_decode(json_decode($application->json_data)->file))
+                        @if(array_key_exists("file",json_decode($application->json_data)))
                             @foreach (json_decode(json_decode($application->json_data)->file) as $file )
 
                                 @if(substr($file, -4) =='.pdf')
@@ -79,11 +76,8 @@
                                             {{ substr($file,3) }}
                                         <i  class="ms-1 fas fa-download"></i>
                                         </a>
-
                                     @else
-
                                             <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/'.$file) }}" alt="{{ $file }}">
-
                                 @endif
                            @endforeach
                         @endif
@@ -92,32 +86,23 @@
                         <h1 class="mt-3"> FEEDBACK</h1>
                         @if($application->feedback)
                           @foreach ($application->feedback as $feedback )
-                          <h1> feebacked By : :{{ $feedback->feedbackedBy->name }}</h1>
-                          <h3>Comment :{{ $feedback->comment }}</h3>
-                          <h2>files/image</h2>
+                                <h1> feebacked By : :{{ $feedback->feedbackedBy->name }}</h1>
+                                <h3>Comment :{{ $feedback->comment }}</h3>
+                                <h2>files/image</h2>
+                                @if(json_decode($feedback->file))
+                                    @foreach (json_decode($feedback->file) as $file )
+                                        @if(substr($file, -4) =='.pdf')
+                                            <a class="btn my-2  btn-primary me-3" href="{{ route('admin.application.feedback.download',$file) }}">
+                                                {{ substr($file,3) }}
+                                            <i  class="ms-1 fas fa-download"></i>
+                                            </a>
+                                        @else
+                                                <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/feedback/'.$file) }}" alt="{{ $file }}">
 
-                          @if(json_decode($feedback->file))
-
-                                @foreach (json_decode($feedback->file) as $file )
-
-                                    @if(substr($file, -4) =='.pdf')
-
-                                        <a class="btn my-2  btn-primary me-3" href="{{ route('admin.application.feedback.download',$file) }}">
-                                            {{ substr($file,3) }}
-                                        <i  class="ms-1 fas fa-download"></i>
-                                        </a>
-
-
-                                    @else
-
-                                            <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/feedback/'.$file) }}" alt="{{ $file }}">
-
-                                    @endif
-
-                                @endforeach
-
-                          @endif
-                          @endforeach
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endforeach
                         @endif
 
 

@@ -48,7 +48,6 @@
                                                         <td>({{ json_decode($application->json_data)->countryCode }}) {{ $value }}</td>
                                                         @else
                                                             <th>{{ ucfirst(str_replace('_', ' ', $key)) }}:</th>
-
                                                             <td>{{ $value }}</td>
                                                     @endif
 
@@ -60,8 +59,6 @@
 
                                 <tr>
                                     <th>Status:</th>
-
-                                    {{--  <td>{{ $application->status }}</td>  --}}
                                     <td> <span class="badge {{ ($application->status == 'accept' ? "bg-success":"bg-danger")  }}">{{ $application->status }}</span></td>
                                 </tr>
                             </tbody>
@@ -69,7 +66,7 @@
                         </table>
 
                         <h2> Files/Images</h2>
-                        @if(json_decode(json_decode($application->json_data)->file))
+                        @if(array_key_exists("file",json_decode($application->json_data)))
                             @foreach (json_decode(json_decode($application->json_data)->file) as $file )
 
                                 @if(substr($file, -4) =='.pdf')

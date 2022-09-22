@@ -15,7 +15,7 @@
 
 
     </head>
-    <body style="width:100%;height:100vh;">
+    <body style="width:100%;height:100vh; overflow: hidden;">
         <div class="home-page" >
             <div class="row">
                 <div class="col-lg-6 col-md-10 col-sm-10 col-10 m-auto mt-5"
@@ -182,7 +182,7 @@
                                                             </div>
                                                         @endif
                                                      @else
-                                                      <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-4">
+                                                      <div class="col-lg-12 col-md-6 col-sm-12 col-12 mb-3">
                                                         <div class="form-group">
                                                             <label for="{{ $element->input_name }}">{{ $element->input_label }}  @if($element->is_required == 1)
                                                                 <span class="text-danger">*</span>
@@ -209,11 +209,11 @@
                                          @endforelse
 
                                          @if(count($formElememts) != 0)
-                                          <button type="submit" class="btn btn-sm btn-primary mt-4">Submit</button>
+                                           <div class="col-lg-4">
+                                            <button type="submit" class="btn btn-sm btn-primary mt-4">Submit</button>
+                                           </div>
                                          @endif
-
                                         </div>
-
                                     </form>
                                     </div>
                                     <!-- end row -->

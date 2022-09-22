@@ -60,8 +60,6 @@ use App\Http\Controllers\Admin\UserRoleController;
         //guest route end
 
 
-
-
         //auth admin route start
         Route::middleware(['auth:admin','checkStatus'])->group(function(){
 
@@ -104,7 +102,6 @@ use App\Http\Controllers\Admin\UserRoleController;
 
             });
 
-
             //settings route
             Route::prefix('settings')->name('settings.')->group(function(){
                 Route::controller(GeneralSettingsController::class)->group(function(){
@@ -144,10 +141,14 @@ use App\Http\Controllers\Admin\UserRoleController;
                     Route::post('/feed-back/{id}','feedbackStore')->name('feedback.store');
                     Route::get('/feed-back/download/{name}','feedbackDownload')->name('feedback.download');
                 });
+
                 //  application form element route
                 Route::controller(AdminApplicationFormController::class)->prefix('form')->name('form.')->group(function(){
                     Route::get('/index','index')->name('index');
+                    Route::get('/priority-check/{number}','priorityCheck')->name('priority.check');
                     Route::post('/store','store')->name('store');
+                    Route::post('/update/{id}','update')->name('update');
+                    Route::get('/destroy/{id}','destroy')->name('destroy');
                 });
 
             });
@@ -155,6 +156,7 @@ use App\Http\Controllers\Admin\UserRoleController;
             Route::controller(UserRoleController::class)->prefix('user-role')->name('user.role.')->group(function(){
                 Route::get('/index','index')->name('index');
                 Route::post('/update/{id}','update')->name('update');
+
             });
 
 

@@ -27,15 +27,14 @@ class DashboardController extends Controller
         }
         else{
             if(!in_array('application.view',Auth::guard('web')->user()->userRole->userPermissions->pluck('name')->toArray())){
-                return view('user.pages.home.index',[
-                    'application'=>'none'
-                ]);
+                $application = 'none';
             }
             else{
-                return view('user.pages.home.index',[
-                    'application'=>Auth::guard('web')->user()->application->first()
-                ]);
+                $application  = Auth::guard('web')->user()->application->first();
             }
+            return view('user.pages.home.index',[
+                'application'=> $application
+            ]);
         }
 
      }

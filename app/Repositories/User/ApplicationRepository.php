@@ -53,16 +53,16 @@ class ApplicationRepository{
         $user->password = Hash::make($password);
         $user->email_verified_at = Carbon::now();
         $user->save();
-        $this->sendMailNotification($request->fname.' '.$request->fname,$user,$password);
+        $this->sendMailNotification($user,$password);
         return $user->id;
 
     }
     /**
      * send a email notification to user
      */
-    public function sendMailNotification($name,$user,$password){
+    public function sendMailNotification($user,$password){
         $userInfo = [
-            'greeting' => 'Hi '.$name.',',
+            'greeting' => 'Hi Dear,',
             'body' => 'Here is Your Login Credential
             Your User Name is - "'.$user->name. '" And Your Password is - "'.$password .'" You Can Login Using These Credentital After Your Application Apporoved. We will Notify you After Apporved ',
             'thanks' => 'Thank you this is from task',

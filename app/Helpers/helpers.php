@@ -4,7 +4,7 @@ use App\Models\Country;
 use App\Models\GeneralSettings;
 
     function generalSettings(){
-        $generalSettings =GeneralSettings::latest()->first();
+        $generalSettings = GeneralSettings::latest()->first();
         return $generalSettings;
 
     }
