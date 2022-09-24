@@ -90,11 +90,27 @@ class ApplicationRepository{
         $application->user->delete();
         $application->delete();
     }
+    /**
+     * find application by status
+     *
+     * @param $request
+     */
+    public function applicationFindByStatus($status){
+        if($status ==  'all'){
+            $applications = $this->index();
+        }
+        else{
+            $applications = Application::with(['user','feedback','feedback.feedbackedBy'])->where('status',$status)->get();
+        }
+        return $applications;
+
+    }
 
     /**
      * create feedback
      */
     public function createFeedback($request,$applicationId){
+  
         $feedback =  new Feedback();
         $feedback->application_id = $applicationId;
         $feedback->comment = $request->comment;
@@ -116,6 +132,7 @@ class ApplicationRepository{
         }
         $feedback->feedbacked_by = Auth::guard('admin')->user()->id;
         $feedback->save();
+       
     }
 
 }

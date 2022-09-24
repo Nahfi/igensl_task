@@ -19,7 +19,7 @@
         <!-- Begin page -->
         <div >
 
-           @include('layouts.user.includes.header')
+           {{--  @include('layouts.user.includes.header')  --}}
 
             <!-- ========== Left Sidebar Start ========== -->
               {{--  @include('layouts.user.includes.left_sidebar')  --}}

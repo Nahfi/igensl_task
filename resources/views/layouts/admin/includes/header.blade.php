@@ -3,7 +3,7 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="{{ route('admin.home') }}" class="logo logo-dark">
+                <a href="{{ route('admin.application.index') }}" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ asset('photo/settings/general') }}/{{ generalSettings()->logo_sm_dark }}" alt="" height="30">
                     </span>
@@ -12,7 +12,7 @@
                     </span>
                 </a>
 
-                <a href="{{ route('admin.home') }}" class="logo logo-light">
+                <a href="{{ route('admin.application.index') }}" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ asset('photo/settings/general') }}/{{ generalSettings()->logo_sm_light }} "alt="" height="30">
                     </span>

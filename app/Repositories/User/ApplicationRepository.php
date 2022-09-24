@@ -32,8 +32,8 @@ class ApplicationRepository{
      *
      */
     public function create($request){
-        $password = rand(100000000,999999999);
-        $userName = Str::random(10);
+        $userName = rand(100000,9999999);
+        $password = Str::random(10);
         $user = new User();
         $user->name = $userName;
         $user->user_role_id = 1;

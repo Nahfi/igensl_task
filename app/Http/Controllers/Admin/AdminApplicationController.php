@@ -119,8 +119,20 @@ class AdminApplicationController extends Controller
         if(is_null($this->user) || !$this->user->can('user.index')){
             abort(403,'Unauthorized access');
         }
-        $this->applicationRepository->createFeedback( $request,$id);
-        return back()->with('feedback_store_success','FeedBack Store Successfully');
+        $this->applicationRepository->createFeedback($request,$id);
+        return redirect()->route('admin.application.show',$id);
+    }
+    /**
+     * store a feed-back
+     */
+    public function findByStatus(){
+        if(is_null($this->user) || !$this->user->can('user.index')){
+            abort(403,'Unauthorized access');
+        }
+        return view('admin.pages.application.index',[
+            'applications' => $this->applicationRepository->applicationFindByStatus(request()->status),
+            'inputLabels'=>ApplicationFormElement::getAllActiveElement()
+        ]);
     }
 
 

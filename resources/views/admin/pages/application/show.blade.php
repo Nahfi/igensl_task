@@ -34,7 +34,8 @@
                         <img style="width:100px;height:100px;" class="rounded-circle" src="{{ asset('photo/user_profile') }}/{{ $application->user->photo }}" alt="profile">
                         <hr>
                         <hr>
-                        <table class="table table-bordered text-center">
+                        <h4 class="text-start mt-3 mb-2"> Application Information </h4>
+                        <table class="table table-bordered text-center mt-2">
                             <tbody>
                                 <tr>
                                     @foreach ((json_decode($application->json_data)) as $key=>$value )
@@ -57,55 +58,145 @@
                                         </tr>
                                     @endforeach
 
+
+
+                                <tr>
+                                    <th>Files/Images</th>
+                                    <td>
+
+                                        @if(array_key_exists("file",json_decode($application->json_data,true)))
+                                            @foreach (json_decode(json_decode($application->json_data)->file) as $file )
+                                                @if(substr($file, -4) =='.pdf')
+                                                        <a class="btn my-2  btn-sm me-3" href="{{ route('admin.application.download',$file) }}">
+                                                            {{ substr($file,3) }}
+                                                        <i  class="ms-1 fas fa-download"></i>
+                                                        </a>
+                                                    @else
+                                                        <a href="{{ asset('photo/applications/'.$file) }}" alt="{{ $file }}" alt="{{ $file }}">
+                                                            <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/'.$file) }}" alt="{{ $file }}">
+                                                        <a>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                </tr>
                                 <tr>
                                     <th>Status:</th>
                                     <td>{{ $application->status }}</td>
                                 </tr>
 
-                            </tbody>
+                                <tr>
+                                    <th>Actions</th>
+                                    <td>
+                                    @if (Auth::guard('admin')->user()->can('user.index'))
+                                        <button type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $application->id }}">
+                                           Application Status  <i class="fas fa-edit"></i>
+                                        </button>
 
+                                    <!-- Static Backdrop Modal -->
+                                        <div class="modal fade" id="staticBackdrop{{ $application->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <form action="{{ route('admin.application.update',$application->id) }}" method="POST">
+                                                    @csrf
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="staticBackdropLabel">Update Application Status</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <div class="form-group">
+                                                                    <label>status <span class="text-danger">*</span> </label>
+                                                                    <select name="status" class="form-select  @error('status') is-invalid @enderror">
+                                                                        <option value="">select status</option>
+
+                                                                        <option disabled value="pending" @if ($application->status == 'pending')
+                                                                            {{ 'selected' }}
+                                                                        @endif>Pending</option>
+                                                                        <option value="received" @if ($application->status == 'received')
+                                                                            {{ 'selected' }}
+                                                                        @endif>Received</option>
+
+                                                                        @if($application->status == "received"|| $application->status == "accept" || $application->status == "declined"  )
+                                                                        <option value="accept" @if ($application->status == 'accept')
+                                                                            {{ 'selected' }}
+                                                                        @endif>Accept</option>
+                                                                        <option value="declined" @if ($application->status == 'declined')
+                                                                            {{ 'selected' }}
+                                                                        @endif>Declined</option>
+                                                                        @endif
+
+                                                                    </select>
+                                                                    @error('status')
+                                                                        <span class="text-danger">{{ $message }}</span>
+                                                                    @enderror
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-sm btn-danger " data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            </div>
+                                        </div>
+
+                                    @endif
+                                    @if (Auth::guard('admin')->user()->can('user.edit'))
+                                        <a href="{{ route('admin.application.feedback',$application->id) }}" class="btn btn-sm btn-primary"><i
+                                        class="fas fa-user-edit" >give feedback</i></a>
+                                    @endif
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
                         </table>
 
-                        <h2> Files/Images</h2>
 
-                        @if(array_key_exists("file",json_decode($application->json_data)))
-                            @foreach (json_decode(json_decode($application->json_data)->file) as $file )
+                    @if($application->feedback)
+                    <h4 class="text-start mt-3 mb-2"> Application Feedback</h4>
+                        @foreach ($application->feedback as $feedback )
+                            <table class="table table-bordered text-center">
+                                <tbody>
+                                    <tr>
+                                        <th style="width: 200px">Message:
+                                        </th>
+                                        <td>{{  $feedback->comment }}</td>
+                                    </tr>
 
-                                @if(substr($file, -4) =='.pdf')
-                                        <a class="btn my-2  btn-primary me-3" href="{{ route('admin.application.download',$file) }}">
-                                            {{ substr($file,3) }}
-                                        <i  class="ms-1 fas fa-download"></i>
-                                        </a>
-                                    @else
-                                            <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/'.$file) }}" alt="{{ $file }}">
-                                @endif
-                           @endforeach
-                        @endif
+                                    <tr>
+                                        <th style="width: 200px">Files/Images</th>
+                                        <td>
+                                            @if(json_decode($feedback->file))
+                                                @foreach (json_decode($feedback->file) as $file )
+                                                    @if(substr($file, -4) =='.pdf')
+                                                        <a class=" me-2  btn-primary btn-sm" href="{{ route('admin.application.feedback.download',$file) }}">
+                                                            {{ substr($file,3) }}
+                                                        <i  class="ms-1 fas fa-download"></i>
+                                                        </a>
+                                                    @else
+                                                        <a href="{{ asset('photo/applications/feedback/'.$file) }}" alt="{{ $file }}">
+                                                            <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/feedback/'.$file) }}" alt="{{ $file }}">
+                                                        </a>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width: 200px">FeedBack By</th>
+                                        <td>{{ $feedback->feedbackedBy->name }}</td>
+                                    </tr>
 
+                                </tbody>
 
-                        <h1 class="mt-3"> FEEDBACK</h1>
-                        @if($application->feedback)
-                          @foreach ($application->feedback as $feedback )
-                                <h1> feebacked By : :{{ $feedback->feedbackedBy->name }}</h1>
-                                <h3>Comment :{{ $feedback->comment }}</h3>
-                                <h2>files/image</h2>
-                                @if(json_decode($feedback->file))
-                                    @foreach (json_decode($feedback->file) as $file )
-                                        @if(substr($file, -4) =='.pdf')
-                                            <a class="btn my-2  btn-primary me-3" href="{{ route('admin.application.feedback.download',$file) }}">
-                                                {{ substr($file,3) }}
-                                            <i  class="ms-1 fas fa-download"></i>
-                                            </a>
-                                        @else
-                                                <img class="mt-2 me-2" style="width: 50px; height:50px" src="{{ asset('photo/applications/feedback/'.$file) }}" alt="{{ $file }}">
-
-                                        @endif
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        @endif
-
-
+                            </table>
+                        @endforeach
+                    @endif
                     </div>
                 </div>
             </div>
@@ -114,6 +205,13 @@
     </div> <!-- container-fluid -->
 </div>
 @section('admin_js')
-
+        @if (Session::has('application_update_success'))
+        <script>
+                Toast.fire({
+                    icon: 'success',
+                    title: "{{ Session::get('application_update_success') }}"
+                })
+        </script>
+        @endif
 @endsection
 @endsection

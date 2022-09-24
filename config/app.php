@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\MailConfigProvider;
+
 return [
 
     /*
@@ -95,7 +97,7 @@ return [
      * Application Mail configuration setup
      * ----------------------------------------------------------------------
      * Here is the delcare of information related with mail
-     * 
+     *
      */
     'mail_mailer' => env('MAIL_MAILER','smtp'),
     'mail_host' => env('MAIL_HOST','smtp.mailtrap.io'),
@@ -162,6 +164,8 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
+
+        MailConfigProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,

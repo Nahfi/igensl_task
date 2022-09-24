@@ -2,8 +2,8 @@
 @section('admin_page_title')
      All Application | Task
 @endsection
-@section('application_active')
-    mm-active
+@section('status_active')
+'status_active'
 @endsection
 @section('admin_css_link')
      <!-- DataTables -->
@@ -54,18 +54,41 @@
                 <div class="card">
 
                         <div class="card-body">
+
                             <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <h5 class="card-title me-4" style="float:left;margin-top:5px">Total Applications <span class="text-muted fw-normal ms-2">({{ $applications->count() }})</span></h5>
                                     </div>
                                 </div>
+                                <form id="status-change" action="{{ route('admin.application.findByStatus') }}" method="get">
+                                    {{--  @csrf  --}}
+                                        <div class="col-1 mb-4">
+                                            <div class="form-group">
+                                                <select name="status" id="status" class="form-select  @error('name') is-invalid @enderror">
+                                                    <option value="">select status</option>
+                                                    <option  value="all"
+                                                      @if(Route::currentRouteName() == 'admin.application.index' || request()->get('status') == 'all')
+                                                        selected
+                                                      @endif
+                                                    >All</option>
+                                                    <option  value="pending" {{  request()->get('status') == 'pending' ? "selected":"" }}>Pending</option>
+                                                    <option  value="received" {{  request()->get('status') == 'received' ? "selected":"" }}>Received</option>
+                                                    <option  value="accept" {{  request()->get('status') == 'accept' ? "selected":"" }}>Accept</option>
+                                                    <option  value="declined" {{  request()->get('status') == 'declined' ? "selected":"" }}>Declined</option>
+                                                </select>
+                                                @error('status')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
 
+                                </form>
                             </div>
                             <div style="height: calc(100vh - 270px);overflow-y:scroll;overflow-x:hidden;">
 
-
                                 <table id="datatable-buttons" class="table table-bordered dt-responsive  nowrap w-100" style="height: 10px;">
+
                                     <thead>
                                     <tr>
                                         <th>S\N</th>
@@ -111,69 +134,11 @@
                                                     @endif
                                                 @endforeach
                                                 <td> <span class="badge {{ ($application->status == 'accept' ? "bg-success":"bg-danger")  }}
-                                                    {{ ($application->status == 'received' ? "bg-success":"bg-danger")  }}
+                                                 
                                                     ">{{ $application->status }}</span></td>
                                                 <td>
                                                     @if (Auth::guard('admin')->user()->can('user.index'))
-                                                        <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $application->id }}">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-
-                                                    <!-- Static Backdrop Modal -->
-                                                        <div class="modal fade" id="staticBackdrop{{ $application->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <form action="{{ route('admin.application.update',$application->id) }}" method="POST">
-                                                                    @csrf
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="staticBackdropLabel">Update Application Status</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="row">
-                                                                            <div class="col-12">
-                                                                                <div class="form-group">
-                                                                                    <label>status <span class="text-danger">*</span> </label>
-                                                                                    <select name="status" class="form-select  @error('status') is-invalid @enderror">
-                                                                                        <option value="">select status</option>
-
-                                                                                        <option disabled value="pending" @if ($application->status == 'pending')
-                                                                                            {{ 'selected' }}
-                                                                                        @endif>Pending</option>
-                                                                                        <option value="received" @if ($application->status == 'received')
-                                                                                            {{ 'selected' }}
-                                                                                        @endif>Received</option>
-
-                                                                                        @if($application->status == "received"|| $application->status == "accept" || $application->status == "declined"  )
-                                                                                        <option value="accept" @if ($application->status == 'accept')
-                                                                                            {{ 'selected' }}
-                                                                                        @endif>Accept</option>
-                                                                                        <option value="declined" @if ($application->status == 'declined')
-                                                                                            {{ 'selected' }}
-                                                                                        @endif>Declined</option>
-                                                                                        @endif
-
-                                                                                    </select>
-                                                                                    @error('status')
-                                                                                        <span class="text-danger">{{ $message }}</span>
-                                                                                    @enderror
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Update</button>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                            </div>
-                                                        </div>
-                                                        <a href="{{ route('admin.application.show',$application->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-eye" ></i></a>
-                                                    @endif
-                                                    @if (Auth::guard('admin')->user()->can('user.edit'))
-                                                        <a href="{{ route('admin.application.feedback',$application->id) }}" class="btn btn-sm btn-primary"><i
-                                                            class="fas fa-user-edit" >give feedback</i></a>
+                                                      <a href="{{ route('admin.application.show',$application->id) }}" class="btn btn-sm btn-primary"><i class="fas fa-eye" ></i></a>
                                                     @endif
                                                     @if (Auth::guard('admin')->user()->can('user.destroy'))
 
@@ -213,6 +178,16 @@
             })
     </script>
     @endif
+
+    @if (Session::has('feedback_store_success'))
+    <script>
+            Toast.fire({
+                icon: 'success',
+                title: "{{ Session::get('feedback_store_success') }}"
+            })
+    </script>
+    @endif
+
     @if ($errors->any())
     <script>
         Toast.fire({
@@ -232,6 +207,12 @@
                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                  }
              });
+
+             //status on change event
+             $(document).on('change','#status',function(e){
+                $('#status-change').submit()
+                e.preventDefault()
+             })
 
              //sweat delete
              $(document).on('click','.sweet_delete',function(){

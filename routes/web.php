@@ -134,6 +134,7 @@ use App\Http\Controllers\Admin\UserRoleController;
                 Route::controller(AdminApplicationController::class)->group(function(){
                     Route::get('/index','index')->name('index');
                     Route::get('/show/{id}','show')->name('show');
+                    Route::get('/status','findByStatus')->name('findByStatus');
                     Route::post('/update/{id}','update')->name('update');
                     Route::get('/download/{name}','download')->name('download');
                     Route::get('/destroy/{id}','destroy')->name('destroy');

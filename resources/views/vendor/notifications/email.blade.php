@@ -13,7 +13,6 @@
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
 {{ $line }}
-
 @endforeach
 
 {{-- Action Button --}}

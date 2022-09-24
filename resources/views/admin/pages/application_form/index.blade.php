@@ -42,7 +42,7 @@
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('admin.home') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">formElements</li>
+                            <li class="breadcrumb-item active">Form Elements</li>
                         </ol>
                     </div>
                 </div>
@@ -158,14 +158,14 @@
                                                                   </div>
                                                                 </div>
 
-                                                                <button type="submit" class="btn btn-sm btn-primary mb-2">Submit</button>
+
                                                             </div>
-                                                        </form>
+
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
                                                     </div>
+                                                </form>
                                                     </div>
                                                 </div>
                                                 </div>
@@ -178,14 +178,13 @@
                             </div>
                             <div style="height: calc(100vh - 270px);overflow-y:scroll;overflow-x:hidden;">
 
-
                                 <table id="datatable-buttons" class="table table-bordered dt-responsive  nowrap w-100" style="height: 10px;">
                                     <thead>
                                     <tr>
                                         <th>S\N</th>
                                         <th>Input Type </th>
                                         <th>Input Label</th>
-                                        <th>input Name</th>
+                                        <th>Input Name</th>
                                         <th>Input Value</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -196,10 +195,14 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>
-                                                    {{ $formElement->input_type }}(Requred  :{{ $formElement->is_required == 1 ? "True" :'False' }})
+                                                    {{ $formElement->input_type }}
                                                 </td>
                                                 <td>
                                                     {{ $formElement->input_label }}
+                                                    @if ($formElement->is_required == 1)
+                                                     <span class="text-danger">*</span>
+                                                    @endif
+
                                                 </td>
                                                 <td>
                                                     {{ $formElement->input_name }}
@@ -214,7 +217,7 @@
 
                                                 <td>
                                                     @if (Auth::guard('admin')->user()->can('user.index'))
-                                                        <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $formElement->id }}">
+                                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ $formElement->id }}">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
 
@@ -266,7 +269,7 @@
 
                                                     @if (Auth::guard('admin')->user()->can('user.destroy'))
                                                          <a href="#" value='{{ $formElement->id }}'  class="btn btn-sm btn-danger sweet_delete"> <i class="fas fa-trash-alt"></i></a>
-                                                        {{--  <a href="{{ route('admin.application.form.destroy',$formElement->id) }}"  class="btn btn-sm btn-danger"> <i class="fas fa-trash-alt"></i></a>  --}}
+
                                                     @endif
 
                                                 </td>

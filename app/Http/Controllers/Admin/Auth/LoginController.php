@@ -31,7 +31,7 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
         if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password],$request->remember)){
-            return redirect()->route('admin.home');
+            return redirect()->route('admin.application.index');
         }
         else{
             Auth::guard('admin')->logout();
