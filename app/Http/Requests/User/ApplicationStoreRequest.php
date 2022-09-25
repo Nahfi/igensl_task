@@ -32,7 +32,7 @@ class ApplicationStoreRequest extends FormRequest
         foreach($inputInformations as $input){
             $required = $input->is_required == 1 ?'required':'';
             if($input->input_name == 'email' || $input->input_type == 'email'){
-                $validation [$input->input_name]  = $required;
+                  $validation [$input->input_name]  = 'unique:users,email|'.$required;
             }
             else if($input->input_type == 'file'){
                 if(request()->hasFile('file')){
